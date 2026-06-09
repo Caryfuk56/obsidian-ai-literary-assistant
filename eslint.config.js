@@ -9,7 +9,7 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: ["**/dist/**", "**/node_modules/**", "**/main.js", "**/*.mjs", "eslint.config.js"]
+    ignores: ["**/dist/**", "**/dist-test/**", "**/node_modules/**", "**/main.js", "**/*.mjs", "eslint.config.js"]
   },
   js.configs.recommended,
   ...tseslint.configs.strictTypeChecked,

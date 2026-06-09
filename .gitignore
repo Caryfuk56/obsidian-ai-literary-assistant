@@ -1,3 +1,4 @@
 .codex
+.pnpm-store
+dist-test
 node_modules
-docs
