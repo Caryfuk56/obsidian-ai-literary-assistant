@@ -3,6 +3,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { I18nextProvider } from "react-i18next";
 
 import { i18n } from "../locales/i18n";
+import type LiteraryAssistantPlugin from "../main";
 import { AppShell } from "./AppShell";
 
 /**
@@ -16,7 +17,7 @@ export const LITERARY_ASSISTANT_VIEW_TYPE = "ai-literary-assistant-view";
 export class LiteraryAssistantView extends ItemView {
   private reactRoot: Root | null = null;
 
-  public constructor(leaf: WorkspaceLeaf) {
+  public constructor(leaf: WorkspaceLeaf, private readonly plugin: LiteraryAssistantPlugin) {
     super(leaf);
   }
 
@@ -38,7 +39,7 @@ export class LiteraryAssistantView extends ItemView {
     this.reactRoot = createRoot(reactContainer);
     this.reactRoot.render(
       <I18nextProvider i18n={i18n}>
-        <AppShell app={this.app} />
+        <AppShell app={this.app} plugin={this.plugin} />
       </I18nextProvider>
     );
 

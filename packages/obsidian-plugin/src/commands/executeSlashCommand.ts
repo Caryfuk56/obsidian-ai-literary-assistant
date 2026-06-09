@@ -1,4 +1,9 @@
-import type { SlashCommandContext, SlashCommandName, SlashCommandResult } from "./slashCommandTypes";
+import type {
+  SlashCommandContext,
+  SlashCommandExecutionInput,
+  SlashCommandName,
+  SlashCommandResult
+} from "./slashCommandTypes";
 import { slashCommands } from "./slashCommands";
 
 /**
@@ -6,9 +11,13 @@ import { slashCommands } from "./slashCommands";
  */
 export const executeSlashCommand = async (
   commandName: SlashCommandName,
-  context: SlashCommandContext
+  context: SlashCommandContext,
+  input: SlashCommandExecutionInput = {
+    args: "",
+    rawInput: commandName
+  }
 ): Promise<SlashCommandResult | undefined> => {
   const command = slashCommands[commandName];
 
-  return command.execute(context);
+  return command.execute(context, input);
 };

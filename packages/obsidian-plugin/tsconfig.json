@@ -3,7 +3,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "tsBuildInfoFile": "dist/.tsbuildinfo",
-    "types": ["obsidian"]
+    "types": ["obsidian", "node"]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json"]
 }

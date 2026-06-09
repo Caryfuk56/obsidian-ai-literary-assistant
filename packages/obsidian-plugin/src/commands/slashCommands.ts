@@ -1,4 +1,5 @@
 import { executeHelpCommand } from "./helpCommand";
+import { executeTestLlmCommand } from "./testLlmCommand";
 import type { SlashCommandContext, SlashCommandDefinition } from "./slashCommandTypes";
 
 /**
@@ -11,6 +12,13 @@ export const slashCommands = {
     id: "help",
     name: "/help",
     nameKey: "slashCommands.help.name"
+  },
+  "/test-llm": {
+    descriptionKey: "slashCommands.testLlm.description",
+    execute: executeTestLlmCommand,
+    id: "test-llm",
+    name: "/test-llm",
+    nameKey: "slashCommands.testLlm.name"
   }
 } as const satisfies Record<string, SlashCommandDefinition>;
 

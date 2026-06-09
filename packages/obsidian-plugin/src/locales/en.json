@@ -4,6 +4,90 @@
     "noticeUnloaded": "AI Literary Assistant unloaded.",
     "openViewCommand": "Open Literary Assistant"
   },
+  "settings": {
+    "title": "Aurelius AI settings",
+    "storageNotice": "API keys are stored in Obsidian plugin data, not in an encrypted OS keychain.",
+    "apiKeys": {
+      "placeholder": "Paste API key",
+      "openAi": {
+        "label": "OpenAI API key",
+        "description": "Used when a model tier is configured for OpenAI."
+      },
+      "google": {
+        "label": "Gemini API key",
+        "description": "Used when a model tier is configured for Google Gemini."
+      },
+      "openRouter": {
+        "label": "OpenRouter API key",
+        "description": "Used when a model tier is configured for OpenRouter."
+      }
+    },
+    "ollamaEndpoint": {
+      "label": "Ollama endpoint URL",
+      "description": "OpenAI-compatible local endpoint for Ollama."
+    },
+    "defaultTier": {
+      "label": "Default chat tier",
+      "description": "Tier used for ordinary chat messages."
+    },
+    "tierProvider": {
+      "label": "Provider",
+      "description": "LLM provider for this model tier."
+    },
+    "tierModel": {
+      "label": "Model",
+      "description": "Recommended model or custom model selector.",
+      "customOption": "Custom..."
+    },
+    "customModel": {
+      "label": "Custom model",
+      "description": "Exact provider model id to use for this tier.",
+      "placeholder": "provider-model-id"
+    },
+    "tiers": {
+      "thoughtful": {
+        "heading": "Thoughtful tier"
+      },
+      "basic": {
+        "heading": "Basic tier"
+      },
+      "local": {
+        "heading": "Local tier"
+      }
+    }
+  },
+  "providers": {
+    "openai": "OpenAI",
+    "google": "Google Gemini",
+    "openrouter": "OpenRouter",
+    "ollama": "Ollama"
+  },
+  "modelTiers": {
+    "thoughtful": "Thoughtful",
+    "basic": "Basic",
+    "local": "Local"
+  },
+  "models": {
+    "gpt51": "GPT-5.1",
+    "gpt5Mini": "GPT-5 mini",
+    "gemini25Flash": "Gemini 2.5 Flash",
+    "gemini25Pro": "Gemini 2.5 Pro",
+    "llama31": "Llama 3.1",
+    "mistralLocal": "Mistral",
+    "openRouterGpt51": "OpenRouter: GPT-5.1",
+    "openRouterGemini25Flash": "OpenRouter: Gemini 2.5 Flash",
+    "openRouterClaudeSonnet45": "OpenRouter: Claude Sonnet 4.5"
+  },
+  "llm": {
+    "errors": {
+      "missingTier": "Unknown model tier.",
+      "missingModel": "No model is configured for this tier.",
+      "missingOpenAiKey": "OpenAI API key is missing.",
+      "missingGoogleKey": "Gemini API key is missing.",
+      "missingOpenRouterKey": "OpenRouter API key is missing.",
+      "missingOllamaEndpoint": "Ollama endpoint URL is missing."
+    }
+  },
   "mainMenu": {
     "ariaLabel": "Literary Assistant views",
     "chat": {
@@ -28,6 +112,11 @@
       "description": "Show available slash commands.",
       "markdownTitle": "Available slash commands",
       "markdownIntro": "These commands can be used from chat input or quick actions."
+    },
+    "testLlm": {
+      "name": "Test LLM",
+      "description": "Test model connectivity for a specific tier.",
+      "invalidTier": "Usage: `/test-llm thoughtful`, `/test-llm basic`, or `/test-llm local`."
     }
   },
   "quickActions": {
@@ -49,6 +138,10 @@
       "searchLabel": "Search vault files",
       "searchPlaceholder": "Search files"
     },
+    "errors": {
+      "genericLlmFailure": "The model request failed. Check the provider settings and try again.",
+      "unknownCommand": "Unknown command: `{{command}}`."
+    },
     "input": {
       "attachmentOnlyMessage": "Attached context for the next response.",
       "label": "Message",
@@ -61,16 +154,6 @@
       "copy": "Copy",
       "expand": "Expand",
       "loading": "Loading"
-    },
-    "mock": {
-      "aiResponse": "The scene has a strong inward pressure, especially where the dialogue narrows into short replies.\n\n- The strongest beat is the hesitation before the answer.\n- The repeated glass imagery may need one sharper variation.\n- Aurelius can sound less declarative if one line becomes a question.",
-      "attachmentName": "chapter-one.md",
-      "processLog": {
-        "pacing": "Checking scene-level pacing.",
-        "preparing": "Preparing a concise revision note.",
-        "reading": "Reading attached draft context."
-      },
-      "userMessage": "I need a careful first pass over this chapter. Look for emotional continuity, scene rhythm, and whether Aurelius sounds too certain in the middle exchange.\n\nAlso notice any repeated metaphors I may have stopped hearing."
     },
     "processLog": {
       "title": "Process log"

@@ -4,6 +4,90 @@
     "noticeUnloaded": "AI Literary Assistant byl ukončen.",
     "openViewCommand": "Otevřít Literary Assistant"
   },
+  "settings": {
+    "title": "Nastavení AI Aurelius",
+    "storageNotice": "API klíče jsou uloženy v datech pluginu Obsidian, ne v šifrované klíčence operačního systému.",
+    "apiKeys": {
+      "placeholder": "Vlož API klíč",
+      "openAi": {
+        "label": "OpenAI API klíč",
+        "description": "Použije se, když je modelová úroveň nastavena na OpenAI."
+      },
+      "google": {
+        "label": "Gemini API klíč",
+        "description": "Použije se, když je modelová úroveň nastavena na Google Gemini."
+      },
+      "openRouter": {
+        "label": "OpenRouter API klíč",
+        "description": "Použije se, když je modelová úroveň nastavena na OpenRouter."
+      }
+    },
+    "ollamaEndpoint": {
+      "label": "URL endpointu Ollama",
+      "description": "Lokální OpenAI-kompatibilní endpoint pro Ollamu."
+    },
+    "defaultTier": {
+      "label": "Výchozí úroveň chatu",
+      "description": "Úroveň použitá pro běžné chatové zprávy."
+    },
+    "tierProvider": {
+      "label": "Provider",
+      "description": "LLM provider pro tuto modelovou úroveň."
+    },
+    "tierModel": {
+      "label": "Model",
+      "description": "Doporučený model nebo vlastní model.",
+      "customOption": "Vlastní..."
+    },
+    "customModel": {
+      "label": "Vlastní model",
+      "description": "Přesné ID modelu u providera pro tuto úroveň.",
+      "placeholder": "provider-model-id"
+    },
+    "tiers": {
+      "thoughtful": {
+        "heading": "Promyšlená úroveň"
+      },
+      "basic": {
+        "heading": "Základní úroveň"
+      },
+      "local": {
+        "heading": "Lokální úroveň"
+      }
+    }
+  },
+  "providers": {
+    "openai": "OpenAI",
+    "google": "Google Gemini",
+    "openrouter": "OpenRouter",
+    "ollama": "Ollama"
+  },
+  "modelTiers": {
+    "thoughtful": "Promyšlená",
+    "basic": "Základní",
+    "local": "Lokální"
+  },
+  "models": {
+    "gpt51": "GPT-5.1",
+    "gpt5Mini": "GPT-5 mini",
+    "gemini25Flash": "Gemini 2.5 Flash",
+    "gemini25Pro": "Gemini 2.5 Pro",
+    "llama31": "Llama 3.1",
+    "mistralLocal": "Mistral",
+    "openRouterGpt51": "OpenRouter: GPT-5.1",
+    "openRouterGemini25Flash": "OpenRouter: Gemini 2.5 Flash",
+    "openRouterClaudeSonnet45": "OpenRouter: Claude Sonnet 4.5"
+  },
+  "llm": {
+    "errors": {
+      "missingTier": "Neznámá modelová úroveň.",
+      "missingModel": "Pro tuto úroveň není nastaven žádný model.",
+      "missingOpenAiKey": "Chybí OpenAI API klíč.",
+      "missingGoogleKey": "Chybí Gemini API klíč.",
+      "missingOpenRouterKey": "Chybí OpenRouter API klíč.",
+      "missingOllamaEndpoint": "Chybí URL endpointu Ollama."
+    }
+  },
   "mainMenu": {
     "ariaLabel": "Zobrazení Literary Assistant",
     "chat": {
@@ -28,6 +112,11 @@
       "description": "Zobrazí dostupné lomítkové příkazy.",
       "markdownTitle": "Dostupné lomítkové příkazy",
       "markdownIntro": "Tyto příkazy můžeš použít ve vstupu chatu nebo v rychlých akcích."
+    },
+    "testLlm": {
+      "name": "Test LLM",
+      "description": "Otestuje spojení modelu pro konkrétní úroveň.",
+      "invalidTier": "Použití: `/test-llm thoughtful`, `/test-llm basic`, nebo `/test-llm local`."
     }
   },
   "quickActions": {
@@ -49,6 +138,10 @@
       "searchLabel": "Hledat soubory ve vaultu",
       "searchPlaceholder": "Hledat soubory"
     },
+    "errors": {
+      "genericLlmFailure": "Požadavek na model selhal. Zkontroluj nastavení providera a zkus to znovu.",
+      "unknownCommand": "Neznámý příkaz: `{{command}}`."
+    },
     "input": {
       "attachmentOnlyMessage": "Připojený kontext pro další odpověď.",
       "label": "Zpráva",
@@ -61,16 +154,6 @@
       "copy": "Kopírovat",
       "expand": "Rozbalit",
       "loading": "Načítám"
-    },
-    "mock": {
-      "aiResponse": "Scéna má silný vnitřní tlak, hlavně tam, kde se dialog zužuje do krátkých odpovědí.\n\n- Nejsilnější moment je zaváhání před odpovědí.\n- Opakovaný motiv skla možná potřebuje jednu ostřejší obměnu.\n- Aurelius může působit méně rozhodně, když se jedna věta změní v otázku.",
-      "attachmentName": "první-kapitola.md",
-      "processLog": {
-        "pacing": "Kontroluji tempo scény.",
-        "preparing": "Připravuji stručnou revizní poznámku.",
-        "reading": "Čtu připojený kontext konceptu."
-      },
-      "userMessage": "Potřebuji pečlivý první průchod touto kapitolou. Sleduj emocionální návaznost, rytmus scény a jestli Aurelius v prostřední výměně nezní příliš jistě.\n\nVšimni si také opakovaných metafor, které už možná neslyším."
     },
     "processLog": {
       "title": "Procesní log"

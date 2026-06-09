@@ -11,3 +11,9 @@
 - Added in-memory file attachment selection UI for vault files.
 - Added logic tests for slash commands, quick action execution, menu definitions, and attachment state.
 - Replaced deprecated `baseUrl` usage in the Obsidian plugin TypeScript config.
+- Planned Iteration 02 in `docs/blueprints/02-ai-routing-settings.md`.
+- Added AI provider settings, configurable model tiers, an AI SDK provider factory, and chat routing.
+- Added `/test-llm [tier]` for provider connectivity checks while preserving `/help`.
+- Replaced mocked chat startup data with an empty functional chat that routes submissions to commands or configured LLM providers.
+- Added logic tests for settings defaults, model resolution, provider validation, chat routing, chat submission state, and the UI/AI SDK import boundary.
+- Added OpenRouter as a configurable provider and hardened settings normalization/chat request cleanup.

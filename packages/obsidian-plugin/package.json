@@ -11,13 +11,18 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.80",
+    "@ai-sdk/openai": "^3.0.68",
+    "@ai-sdk/openai-compatible": "^2.0.48",
     "@obsidian-ai-literary-assistant/core-utils": "workspace:*",
+    "ai": "^6.0.198",
     "i18next": "^24.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-i18next": "^15.4.0"
   },
   "devDependencies": {
+    "@types/node": "^25.9.2",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "esbuild": "^0.24.2",
