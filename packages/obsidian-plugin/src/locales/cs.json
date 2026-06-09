@@ -1,0 +1,12 @@
+{
+  "plugin": {
+    "noticeLoaded": "AI Literary Assistant je nacten.",
+    "noticeUnloaded": "AI Literary Assistant byl ukoncen.",
+    "openViewCommand": "Otevrit Literary Assistant"
+  },
+  "view": {
+    "title": "AI Literary Assistant",
+    "heading": "Ahoj svete!",
+    "body": "Panel literarniho asistenta je pripraven."
+  }
+}

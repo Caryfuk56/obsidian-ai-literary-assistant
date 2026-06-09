@@ -1,0 +1,12 @@
+{
+  "plugin": {
+    "noticeLoaded": "AI Literary Assistant loaded.",
+    "noticeUnloaded": "AI Literary Assistant unloaded.",
+    "openViewCommand": "Open Literary Assistant"
+  },
+  "view": {
+    "title": "AI Literary Assistant",
+    "heading": "Hello World!",
+    "body": "Your literary assistant panel is ready."
+  }
+}
