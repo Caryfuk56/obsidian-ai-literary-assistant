@@ -4,6 +4,78 @@
     "noticeUnloaded": "AI Literary Assistant unloaded.",
     "openViewCommand": "Open Literary Assistant"
   },
+  "mainMenu": {
+    "ariaLabel": "Literary Assistant views",
+    "chat": {
+      "name": "Chat",
+      "description": "Open chat"
+    },
+    "quickActions": {
+      "name": "Quick Actions",
+      "description": "Open quick actions"
+    }
+  },
+  "overflowMenu": {
+    "openLabel": "Open menu",
+    "help": {
+      "name": "Quick actions",
+      "description": "Open the quick actions view"
+    }
+  },
+  "slashCommands": {
+    "help": {
+      "name": "Help",
+      "description": "Show available slash commands.",
+      "markdownTitle": "Available slash commands",
+      "markdownIntro": "These commands can be used from chat input or quick actions."
+    }
+  },
+  "quickActions": {
+    "ariaLabel": "Quick actions",
+    "general": {
+      "name": "General"
+    },
+    "help": {
+      "name": "Help",
+      "description": "Show slash command help"
+    }
+  },
+  "chat": {
+    "ariaLabel": "Chat",
+    "attachments": {
+      "attachLabel": "Attach file",
+      "empty": "No files found.",
+      "removeLabel": "Remove {{name}}",
+      "searchLabel": "Search vault files",
+      "searchPlaceholder": "Search files"
+    },
+    "input": {
+      "attachmentOnlyMessage": "Attached context for the next response.",
+      "label": "Message",
+      "placeholder": "Write something...",
+      "sendLabel": "Send"
+    },
+    "messages": {
+      "assistantName": "Aurelius",
+      "collapse": "Collapse",
+      "copy": "Copy",
+      "expand": "Expand",
+      "loading": "Loading"
+    },
+    "mock": {
+      "aiResponse": "The scene has a strong inward pressure, especially where the dialogue narrows into short replies.\n\n- The strongest beat is the hesitation before the answer.\n- The repeated glass imagery may need one sharper variation.\n- Aurelius can sound less declarative if one line becomes a question.",
+      "attachmentName": "chapter-one.md",
+      "processLog": {
+        "pacing": "Checking scene-level pacing.",
+        "preparing": "Preparing a concise revision note.",
+        "reading": "Reading attached draft context."
+      },
+      "userMessage": "I need a careful first pass over this chapter. Look for emotional continuity, scene rhythm, and whether Aurelius sounds too certain in the middle exchange.\n\nAlso notice any repeated metaphors I may have stopped hearing."
+    },
+    "processLog": {
+      "title": "Process log"
+    }
+  },
   "view": {
     "title": "AI Literary Assistant",
     "heading": "Hello World!",

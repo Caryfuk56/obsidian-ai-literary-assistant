@@ -3,7 +3,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { I18nextProvider } from "react-i18next";
 
 import { i18n } from "../locales/i18n";
-import { HelloWorldPanel } from "./HelloWorldPanel";
+import { AppShell } from "./AppShell";
 
 /**
  * Stable Obsidian view type for the Literary Assistant sidebar.
@@ -38,7 +38,7 @@ export class LiteraryAssistantView extends ItemView {
     this.reactRoot = createRoot(reactContainer);
     this.reactRoot.render(
       <I18nextProvider i18n={i18n}>
-        <HelloWorldPanel />
+        <AppShell app={this.app} />
       </I18nextProvider>
     );
 

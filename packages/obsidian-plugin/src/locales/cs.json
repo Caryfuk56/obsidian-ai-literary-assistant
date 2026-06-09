@@ -1,12 +1,84 @@
 {
   "plugin": {
-    "noticeLoaded": "AI Literary Assistant je nacten.",
-    "noticeUnloaded": "AI Literary Assistant byl ukoncen.",
-    "openViewCommand": "Otevrit Literary Assistant"
+    "noticeLoaded": "AI Literary Assistant je načten.",
+    "noticeUnloaded": "AI Literary Assistant byl ukončen.",
+    "openViewCommand": "Otevřít Literary Assistant"
+  },
+  "mainMenu": {
+    "ariaLabel": "Zobrazení Literary Assistant",
+    "chat": {
+      "name": "Chat",
+      "description": "Otevřít chat"
+    },
+    "quickActions": {
+      "name": "Rychlé akce",
+      "description": "Otevřít rychlé akce"
+    }
+  },
+  "overflowMenu": {
+    "openLabel": "Otevřít menu",
+    "help": {
+      "name": "Rychlé akce",
+      "description": "Otevřít zobrazení rychlých akcí"
+    }
+  },
+  "slashCommands": {
+    "help": {
+      "name": "Nápověda",
+      "description": "Zobrazí dostupné lomítkové příkazy.",
+      "markdownTitle": "Dostupné lomítkové příkazy",
+      "markdownIntro": "Tyto příkazy můžeš použít ve vstupu chatu nebo v rychlých akcích."
+    }
+  },
+  "quickActions": {
+    "ariaLabel": "Rychlé akce",
+    "general": {
+      "name": "Obecné"
+    },
+    "help": {
+      "name": "Nápověda",
+      "description": "Zobrazit nápovědu k lomítkovým příkazům"
+    }
+  },
+  "chat": {
+    "ariaLabel": "Chat",
+    "attachments": {
+      "attachLabel": "Připojit soubor",
+      "empty": "Nebyly nalezeny žádné soubory.",
+      "removeLabel": "Odebrat {{name}}",
+      "searchLabel": "Hledat soubory ve vaultu",
+      "searchPlaceholder": "Hledat soubory"
+    },
+    "input": {
+      "attachmentOnlyMessage": "Připojený kontext pro další odpověď.",
+      "label": "Zpráva",
+      "placeholder": "Něco napiš...",
+      "sendLabel": "Odeslat"
+    },
+    "messages": {
+      "assistantName": "Aurelius",
+      "collapse": "Sbalit",
+      "copy": "Kopírovat",
+      "expand": "Rozbalit",
+      "loading": "Načítám"
+    },
+    "mock": {
+      "aiResponse": "Scéna má silný vnitřní tlak, hlavně tam, kde se dialog zužuje do krátkých odpovědí.\n\n- Nejsilnější moment je zaváhání před odpovědí.\n- Opakovaný motiv skla možná potřebuje jednu ostřejší obměnu.\n- Aurelius může působit méně rozhodně, když se jedna věta změní v otázku.",
+      "attachmentName": "první-kapitola.md",
+      "processLog": {
+        "pacing": "Kontroluji tempo scény.",
+        "preparing": "Připravuji stručnou revizní poznámku.",
+        "reading": "Čtu připojený kontext konceptu."
+      },
+      "userMessage": "Potřebuji pečlivý první průchod touto kapitolou. Sleduj emocionální návaznost, rytmus scény a jestli Aurelius v prostřední výměně nezní příliš jistě.\n\nVšimni si také opakovaných metafor, které už možná neslyším."
+    },
+    "processLog": {
+      "title": "Procesní log"
+    }
   },
   "view": {
     "title": "AI Literary Assistant",
-    "heading": "Ahoj svete!",
-    "body": "Panel literarniho asistenta je pripraven."
+    "heading": "Ahoj světe!",
+    "body": "Panel literárního asistenta je připraven."
   }
 }
