@@ -1,4 +1,9 @@
 .codex
 .pnpm-store
 dist-test
+dist
 node_modules
+packages/obsidian-plugin/dist/data.json
+packages/obsidian-plugin/dist
+docs
+.analysis

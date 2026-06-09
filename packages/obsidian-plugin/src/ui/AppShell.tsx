@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { mainMenuItems, type MainViewId } from "../definitions/mainMenuItems";
 import { overflowMenuItems } from "../definitions/overflowMenuItems";
+import type LiteraryAssistantPlugin from "../main";
 import { ChatPanel } from "./chat/ChatPanel";
 import { ObsidianIcon } from "./ObsidianIcon";
 import { QuickActionsView } from "./quick-actions/QuickActionsView";
@@ -12,7 +13,13 @@ import { installLiteraryAssistantStyles } from "./styles";
 /**
  * Root React shell for the Literary Assistant sidebar.
  */
-export const AppShell = ({ app }: { readonly app: App }): ReactElement => {
+export const AppShell = ({
+  app,
+  plugin
+}: {
+  readonly app: App;
+  readonly plugin: LiteraryAssistantPlugin;
+}): ReactElement => {
   const { t } = useTranslation();
   const [activeView, setActiveView] = useState<MainViewId>("chat");
   const [programmaticMarkdown, setProgrammaticMarkdown] = useState<string[]>([]);
@@ -66,10 +73,11 @@ export const AppShell = ({ app }: { readonly app: App }): ReactElement => {
       </nav>
       <main className="ai-literary-assistant-content">
         {activeView === "chat" ? (
-          <ChatPanel app={app} programmaticMarkdown={programmaticMarkdown} />
+          <ChatPanel app={app} plugin={plugin} programmaticMarkdown={programmaticMarkdown} />
         ) : (
           <QuickActionsView
             app={app}
+            plugin={plugin}
             onProgrammaticMarkdown={(markdown) => {
               setProgrammaticMarkdown((currentMarkdown) => [...currentMarkdown, markdown]);
               setActiveView("chat");

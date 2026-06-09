@@ -1,4 +1,5 @@
 import type { SlashCommandContext } from "../../commands/slashCommandTypes";
+import { DEFAULT_AURELIUS_SETTINGS } from "../../settings/defaultSettings";
 import { executeQuickAction } from "../executeQuickAction";
 import type { QuickActionItem } from "../quickActionTypes";
 import { assert, assertEqual } from "../../testUtils";
@@ -20,6 +21,7 @@ export const testQuickActionPrefersSlashCommand = async (): Promise<void> => {
   };
   const context = {
     app: {},
+    settings: DEFAULT_AURELIUS_SETTINGS,
     showModal: false,
     t: (key: string) => key
   } as SlashCommandContext;

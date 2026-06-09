@@ -1,5 +1,4 @@
-import type { SlashCommandContext, SlashCommandResult } from "../../commands/slashCommandTypes";
-import { executeSlashCommand } from "../../commands/executeSlashCommand";
+import type { ChatRouteResult } from "../../chat/chatRouterTypes";
 import type { AttachedFile } from "./attachmentState";
 import type { ChatMessage } from "./chatState";
 
@@ -23,67 +22,74 @@ export const CHAT_TEXTAREA_ROW_HEIGHT = 20;
  */
 export interface ChatSubmissionResult {
   clearDraft: boolean;
+  inputForRouter: string;
   messages: ChatMessage[];
 }
 
 /**
- * Converts a submitted chat draft into user or programmatic messages.
+ * Converts a submitted chat draft into immediate user/loading messages.
  */
-export const resolveChatSubmission = async ({
+export const resolveChatSubmission = ({
   attachedFiles,
   attachmentOnlyMessage,
   content,
-  context,
   id
 }: {
   readonly attachedFiles: readonly AttachedFile[];
   readonly attachmentOnlyMessage: string;
   readonly content: string;
-  readonly context: SlashCommandContext;
   readonly id: string;
-}): Promise<ChatSubmissionResult> => {
+}): ChatSubmissionResult => {
   const trimmedContent = content.trim();
 
   if (!trimmedContent && attachedFiles.length === 0) {
     return {
       clearDraft: false,
+      inputForRouter: "",
       messages: []
-    };
-  }
-
-  if (trimmedContent === "/help") {
-    const result = await executeSlashCommand("/help", {
-      ...context,
-      showModal: false
-    });
-
-    return {
-      clearDraft: true,
-      messages: isMarkdownResult(result)
-        ? [
-          {
-            id,
-            markdown: result.markdown,
-            type: "programmatic-markdown"
-          }
-        ]
-        : []
     };
   }
 
   return {
     clearDraft: true,
+    inputForRouter: trimmedContent || attachmentOnlyMessage,
     messages: [
       {
         attachments: attachedFiles,
         content: trimmedContent || attachmentOnlyMessage,
         id,
         type: "user"
+      },
+      {
+        id: `${id}-loading`,
+        type: "ai-loading"
       }
     ]
   };
 };
 
-const isMarkdownResult = (result: SlashCommandResult | undefined): result is SlashCommandResult => (
-  result?.kind === "markdown"
-);
+/**
+ * Converts a router result into a display message.
+ */
+export const chatRouteResultToMessage = (result: ChatRouteResult, id: string): ChatMessage => {
+  switch (result.kind) {
+    case "assistant-markdown":
+      return {
+        id,
+        markdown: result.content,
+        type: "ai-response"
+      };
+    case "programmatic-markdown":
+      return {
+        id,
+        markdown: result.content,
+        type: "programmatic-markdown"
+      };
+    case "error-markdown":
+      return {
+        id,
+        markdown: result.message,
+        type: "error"
+      };
+  }
+};

@@ -162,10 +162,50 @@ The workspace is split into independent packages to ensure modularity and clean 
 └── tsconfig.json             # Shared strict TypeScript base configuration
 
 ```
+---
+
+## 04 - Language Rules
+
+- Source code, JSDoc, architecture documents,
+  ADRs, blueprints, and technical documentation
+  must be written in English.
+
+- Czech is the primary user-facing language.
+
+- All Czech localization strings must use
+  proper Czech grammar and diacritics.
 
 ---
 
-## 4. Execution Guardrails
+## 05 - Czech Localization Rules
+
+The primary application language is Czech.
+
+All user-facing Czech strings must:
+
+- use correct Czech spelling,
+- use proper Czech diacritics,
+- be grammatically correct Czech.
+
+Never remove diacritics.
+
+Examples:
+
+Correct:
+- "Něco napiš..."
+- "Nápověda"
+- "Rychlé akce"
+- "Připojené soubory"
+
+Incorrect:
+- "Neco napis..."
+- "Napoveda"
+- "Rychle akce"
+- "Pripojene soubory"
+
+---
+
+## 6. Execution Guardrails
 
 - **No Destructive Refactoring:** You are forbidden from refactoring adjacent modules unless explicitly requested by the user or defined in the Planner's blueprint.
 - **Fail Fast:** If an Obsidian API capability or an LLM model documentation entry is ambiguous, you must stop and prompt the user for clarification or explicit documentation inputs before writing code.

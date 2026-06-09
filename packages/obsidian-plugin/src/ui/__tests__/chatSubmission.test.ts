@@ -1,38 +1,32 @@
-import type { TFunction } from "i18next";
-
-import type { SlashCommandContext } from "../../commands/slashCommandTypes";
 import { assert, assertEqual } from "../../testUtils";
-import { resolveChatSubmission } from "../chat/chatSubmission";
-
-const t = ((key: string): string => {
-  const translations: Record<string, string> = {
-    "slashCommands.help.description": "Show available slash commands.",
-    "slashCommands.help.markdownIntro": "These commands can be used from chat input or quick actions.",
-    "slashCommands.help.markdownTitle": "Available slash commands",
-    "slashCommands.help.name": "Help"
-  };
-
-  return translations[key] ?? key;
-}) as TFunction;
+import { chatRouteResultToMessage, resolveChatSubmission } from "../chat/chatSubmission";
 
 /**
- * Verifies that chat slash command submissions create programmatic markdown.
+ * Verifies that chat submissions create user and loading messages before routing.
  */
-export const testChatSubmissionExecutesHelpSlashCommand = async (): Promise<void> => {
-  const context = {
-    app: {},
-    showModal: false,
-    t
-  } as SlashCommandContext;
-  const result = await resolveChatSubmission({
+export const testChatSubmissionCreatesUserAndLoadingMessages = (): void => {
+  const result = resolveChatSubmission({
     attachedFiles: [],
     attachmentOnlyMessage: "Attachment only",
     content: "/help",
-    context,
     id: "programmatic-help"
   });
 
   assertEqual(result.clearDraft, true, "Expected slash command submission to clear the draft");
-  assertEqual(result.messages.length, 1, "Expected one programmatic response");
-  assert(result.messages[0]?.type === "programmatic-markdown", "Expected help output to be programmatic markdown.");
+  assertEqual(result.inputForRouter, "/help", "Expected slash command to be routed");
+  assertEqual(result.messages.length, 2, "Expected immediate user and loading messages");
+  assert(result.messages[0]?.type === "user", "Expected submitted text to be shown as a user message.");
+  assert(result.messages[1]?.type === "ai-loading", "Expected a loading message while routing.");
+};
+
+/**
+ * Verifies router results become display messages.
+ */
+export const testChatRouteResultCreatesProgrammaticMarkdown = (): void => {
+  const message = chatRouteResultToMessage({
+    content: "Help",
+    kind: "programmatic-markdown"
+  }, "help-result");
+
+  assertEqual(message.type, "programmatic-markdown", "Expected programmatic router output to stay programmatic");
 };

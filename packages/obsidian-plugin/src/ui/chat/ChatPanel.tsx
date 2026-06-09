@@ -9,15 +9,18 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
+import { ChatRouter } from "../../chat/ChatRouter";
+import type LiteraryAssistantPlugin from "../../main";
 import { ObsidianIcon } from "../ObsidianIcon";
 import { MarkdownBlock } from "../MarkdownBlock";
 import { VaultFilePicker } from "../files/VaultFilePicker";
 import { addAttachedFile, removeAttachedFile, type AttachedFile } from "./attachmentState";
-import { createMockChatMessages, type ChatMessage } from "./chatState";
+import type { ChatMessage } from "./chatState";
 import {
   CHAT_TEXTAREA_MAX_ROWS,
   CHAT_TEXTAREA_MIN_ROWS,
   CHAT_TEXTAREA_ROW_HEIGHT,
+  chatRouteResultToMessage,
   resolveChatSubmission
 } from "./chatSubmission";
 
@@ -26,32 +29,27 @@ import {
  */
 export const ChatPanel = ({
   app,
+  plugin,
   programmaticMarkdown
 }: {
   readonly app: App;
+  readonly plugin: LiteraryAssistantPlugin;
   readonly programmaticMarkdown: readonly string[];
 }): ReactElement => {
   const { t } = useTranslation();
-  const [messages, setMessages] = useState<ChatMessage[]>(() => createMockChatMessages(t));
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const isMountedRef = useRef(true);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    const timeoutId = window.setTimeout(() => {
-      setMessages((currentMessages) => currentMessages.map((message) => (
-        message.type === "process-log"
-          ? {
-            ...message,
-            collapsed: true
-          }
-          : message
-      )));
-    }, 1400);
+    isMountedRef.current = true;
 
     return () => {
-      window.clearTimeout(timeoutId);
+      isMountedRef.current = false;
     };
   }, []);
 
@@ -82,16 +80,16 @@ export const ChatPanel = ({
   }, [draft]);
 
   const submitDraft = async (): Promise<void> => {
-    const result = await resolveChatSubmission({
+    if (isSubmitting) {
+      return;
+    }
+
+    const messageId = `message-${String(Date.now())}`;
+    const result = resolveChatSubmission({
       attachedFiles,
       attachmentOnlyMessage: t("chat.input.attachmentOnlyMessage"),
       content: draft,
-      context: {
-        app,
-        showModal: false,
-        t
-      },
-      id: `message-${String(Date.now())}`
+      id: messageId
     });
 
     if (result.messages.length > 0) {
@@ -102,6 +100,48 @@ export const ChatPanel = ({
       setDraft("");
       setAttachedFiles([]);
       setIsPickerOpen(false);
+    }
+
+    if (!result.inputForRouter) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const router = new ChatRouter({
+        app,
+        settings: plugin.settings,
+        t
+      });
+      const routeResult = await router.route(result.inputForRouter);
+
+      if (!isMountedRef.current) {
+        return;
+      }
+
+      const responseMessage = chatRouteResultToMessage(routeResult, `${messageId}-response`);
+      setMessages((currentMessages) => [
+        ...currentMessages.filter((message) => message.id !== `${messageId}-loading`),
+        responseMessage
+      ]);
+    } catch {
+      if (!isMountedRef.current) {
+        return;
+      }
+
+      const responseMessage = chatRouteResultToMessage({
+        kind: "error-markdown",
+        message: t("chat.errors.genericLlmFailure")
+      }, `${messageId}-response`);
+      setMessages((currentMessages) => [
+        ...currentMessages.filter((message) => message.id !== `${messageId}-loading`),
+        responseMessage
+      ]);
+    } finally {
+      if (isMountedRef.current) {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -168,6 +208,7 @@ export const ChatPanel = ({
             onClick={() => {
               void submitDraft();
             }}
+            disabled={isSubmitting}
             type="button"
           >
             <ObsidianIcon icon="send" />
@@ -204,6 +245,8 @@ const ChatMessageItem = ({
     case "ai-response":
       return <AiResponse app={app} markdown={message.markdown} />;
     case "programmatic-markdown":
+      return <MarkdownBlock app={app} markdown={message.markdown} />;
+    case "error":
       return <MarkdownBlock app={app} markdown={message.markdown} />;
   }
 };
