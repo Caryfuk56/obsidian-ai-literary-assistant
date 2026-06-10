@@ -10,9 +10,12 @@ export const executeQuickAction = async (
   context: SlashCommandContext
 ): Promise<SlashCommandResult | undefined> => {
   if (item.slashCommand) {
+    const args = item.presetArgs ?? "";
+    const rawInput = args ? `${item.slashCommand} ${args}` : item.slashCommand;
+
     return executeSlashCommand(item.slashCommand, context, {
-      args: "",
-      rawInput: item.slashCommand
+      args,
+      rawInput
     });
   }
 

@@ -107,6 +107,10 @@
     }
   },
   "slashCommands": {
+    "chapterMetadata": {
+      "name": "Chapter metadata",
+      "description": "Analyze current chapter metadata."
+    },
     "help": {
       "name": "Help",
       "description": "Show available slash commands.",
@@ -124,9 +128,62 @@
     "general": {
       "name": "General"
     },
+    "chapterMetadata": {
+      "name": "Analyze current chapter",
+      "description": "Extract chapter metadata from the active Markdown file"
+    },
     "help": {
       "name": "Help",
       "description": "Show slash command help"
+    }
+  },
+  "toolOutput": {
+    "ariaLabel": "Tool output"
+  },
+  "chapterMetadata": {
+    "title": "Chapter metadata",
+    "actions": {
+      "approveAndWrite": "Approve and Write",
+      "cancel": "Cancel",
+      "edit": "Edit"
+    },
+    "fields": {
+      "type": "Type",
+      "id": "ID",
+      "metadata_created": "Metadata created",
+      "metadata_updated": "Metadata updated",
+      "title": "Title",
+      "summary": "Summary",
+      "pov": "POV",
+      "status": "Status",
+      "narrative_time": "Narrative time",
+      "timeline_position": "Timeline position",
+      "spoiler_level": "Spoiler level",
+      "linked_plotlines": "Linked plotlines",
+      "linked_characters": "Linked characters",
+      "linked_organizations": "Linked organizations",
+      "linked_systems": "Linked systems",
+      "linked_locations": "Linked locations",
+      "linked_items": "Linked items",
+      "linked_history": "Linked history"
+    },
+    "errors": {
+      "noActiveMarkdownFile": "No active Markdown file",
+      "extractionFailed": "Metadata extraction failed",
+      "invalidAiResponse": "Invalid AI response",
+      "modelTierNotConfigured": "Model tier is not configured",
+      "extractionFailedWithDebug": "Metadata extraction failed. See debug log for details.",
+      "promptLoadFailed": "Metadata extraction prompt could not be loaded.",
+      "invalidReviewState": "Invalid metadata review state",
+      "backupCreationFailed": "Could not create metadata backup. The chapter was not modified.",
+      "backupCleanupFailed": "Metadata was written, but backup cleanup failed. Backup kept at {{path}}",
+      "writeFailed": "Metadata write failed.",
+      "writeFailedRestored": "Metadata write failed. Metadata restored from backup",
+      "writeFailedBackupKept": "Metadata write failed and automatic restore failed. Backup kept at {{path}}"
+    },
+    "notices": {
+      "metadataWritten": "Metadata written successfully",
+      "metadataRestored": "Metadata restored from backup"
     }
   },
   "chat": {

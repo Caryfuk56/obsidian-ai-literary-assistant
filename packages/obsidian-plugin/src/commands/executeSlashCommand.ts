@@ -18,6 +18,14 @@ export const executeSlashCommand = async (
   }
 ): Promise<SlashCommandResult | undefined> => {
   const command = slashCommands[commandName];
+  const commandContext = "promptRecipe" in command
+    ? {
+      ...context,
+      commandDefinition: {
+        promptRecipe: command.promptRecipe
+      }
+    }
+    : context;
 
-  return command.execute(context, input);
+  return command.execute(commandContext, input);
 };

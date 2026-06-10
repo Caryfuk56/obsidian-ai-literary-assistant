@@ -5,10 +5,11 @@ import type { SlashCommandName } from "../commands/slashCommandTypes";
  */
 export interface QuickActionItem {
   command?: () => unknown;
-  descriptionKey: string;
+  descriptionKey?: string;
   icon: string;
   id: string;
-  nameKey: string;
+  nameKey?: string;
+  presetArgs?: string;
   slashCommand?: SlashCommandName;
 }
 

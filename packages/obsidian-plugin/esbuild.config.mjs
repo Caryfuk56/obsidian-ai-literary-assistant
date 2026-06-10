@@ -21,12 +21,24 @@ const buildOptions = {
   external: ["obsidian"],
   format: "cjs",
   logLevel: "info",
+  loader: {
+    ".md": "text"
+  },
   minify: isProduction,
   outfile: `${outputDir}/main.js`,
   platform: "browser",
   sourcemap: !isProduction,
   target: "es2022",
   treeShaking: true
+};
+
+const cssBuildOptions = {
+  bundle: true,
+  entryPoints: ["src/ui/styles/index.css"],
+  logLevel: "info",
+  minify: isProduction,
+  outfile: `${outputDir}/styles.css`,
+  sourcemap: !isProduction
 };
 
 await copyPluginFiles();
@@ -45,9 +57,14 @@ if (shouldWatch) {
       }
     ]
   });
+  const cssContext = await esbuild.context(cssBuildOptions);
 
   await context.watch();
-  console.log(`Watching plugin files and writing builds to ${outputDir}`);
+  await cssContext.watch();
+  console.log(`Watching plugin files and writing JS/CSS builds to ${outputDir}`);
 } else {
-  await esbuild.build(buildOptions);
+  await Promise.all([
+    esbuild.build(buildOptions),
+    esbuild.build(cssBuildOptions)
+  ]);
 }

@@ -1,0 +1,42 @@
+.ai-metadata-review h2 {
+  font-size: var(--font-ui-medium);
+  margin: 0 0 10px;
+}
+
+.ai-metadata-review-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ai-metadata-field-row {
+  border-bottom: 1px solid var(--background-modifier-border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 8px;
+}
+
+.ai-metadata-field-header {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.ai-metadata-field-header label {
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+  font-weight: var(--font-semibold);
+}
+
+.ai-metadata-field-row input,
+.ai-metadata-field-row select,
+.ai-metadata-field-row textarea {
+  width: 100%;
+}
+
+.ai-metadata-field-row textarea {
+  min-height: 54px;
+  resize: vertical;
+}

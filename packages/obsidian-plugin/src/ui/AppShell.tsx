@@ -1,14 +1,16 @@
 import { Menu, type App } from "obsidian";
-import { type MouseEvent, type ReactElement, useEffect, useState } from "react";
+import { type MouseEvent, type ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { mainMenuItems, type MainViewId } from "../definitions/mainMenuItems";
 import { overflowMenuItems } from "../definitions/overflowMenuItems";
 import type LiteraryAssistantPlugin from "../main";
+import type { ToolOutput } from "../chapter-metadata/chapterMetadataTypes";
 import { ChatPanel } from "./chat/ChatPanel";
 import { ObsidianIcon } from "./ObsidianIcon";
 import { QuickActionsView } from "./quick-actions/QuickActionsView";
-import { installLiteraryAssistantStyles } from "./styles";
+import { ToolOutputPanel } from "./tool-output/ToolOutputPanel";
+import { clearToolOutput, setToolOutput } from "./tool-output/toolOutputState";
 
 /**
  * Root React shell for the Literary Assistant sidebar.
@@ -23,10 +25,7 @@ export const AppShell = ({
   const { t } = useTranslation();
   const [activeView, setActiveView] = useState<MainViewId>("chat");
   const [programmaticMarkdown, setProgrammaticMarkdown] = useState<string[]>([]);
-
-  useEffect(() => {
-    installLiteraryAssistantStyles();
-  }, []);
+  const [toolOutput, setCurrentToolOutput] = useState<ToolOutput | undefined>(undefined);
 
   const openOverflowMenu = (event: MouseEvent<HTMLButtonElement>): void => {
     const menu = new Menu();
@@ -73,10 +72,20 @@ export const AppShell = ({
       </nav>
       <main className="ai-literary-assistant-content">
         {activeView === "chat" ? (
-          <ChatPanel app={app} plugin={plugin} programmaticMarkdown={programmaticMarkdown} />
+          <ChatPanel
+            app={app}
+            onToolOutput={(output) => {
+              setCurrentToolOutput((currentOutput) => setToolOutput(currentOutput, output));
+            }}
+            plugin={plugin}
+            programmaticMarkdown={programmaticMarkdown}
+          />
         ) : (
           <QuickActionsView
             app={app}
+            onToolOutput={(output) => {
+              setCurrentToolOutput((currentOutput) => setToolOutput(currentOutput, output));
+            }}
             plugin={plugin}
             onProgrammaticMarkdown={(markdown) => {
               setProgrammaticMarkdown((currentMarkdown) => [...currentMarkdown, markdown]);
@@ -84,6 +93,14 @@ export const AppShell = ({
             }}
           />
         )}
+        <ToolOutputPanel
+          app={app}
+          onClear={() => {
+            const nextOutput = clearToolOutput();
+            setCurrentToolOutput(nextOutput);
+          }}
+          output={toolOutput}
+        />
       </main>
     </div>
   );

@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 
 import { ChatRouter } from "../../chat/ChatRouter";
 import type LiteraryAssistantPlugin from "../../main";
+import type { ToolOutput } from "../../chapter-metadata/chapterMetadataTypes";
 import { ObsidianIcon } from "../ObsidianIcon";
 import { MarkdownBlock } from "../MarkdownBlock";
 import { VaultFilePicker } from "../files/VaultFilePicker";
@@ -30,9 +31,11 @@ import {
 export const ChatPanel = ({
   app,
   plugin,
-  programmaticMarkdown
+  programmaticMarkdown,
+  onToolOutput
 }: {
   readonly app: App;
+  readonly onToolOutput: (output: ToolOutput) => void;
   readonly plugin: LiteraryAssistantPlugin;
   readonly programmaticMarkdown: readonly string[];
 }): ReactElement => {
@@ -117,6 +120,12 @@ export const ChatPanel = ({
       const routeResult = await router.route(result.inputForRouter);
 
       if (!isMountedRef.current) {
+        return;
+      }
+
+      if (routeResult.kind === "tool-output") {
+        setMessages((currentMessages) => currentMessages.filter((message) => message.id !== `${messageId}-loading`));
+        onToolOutput(routeResult.output);
         return;
       }
 
