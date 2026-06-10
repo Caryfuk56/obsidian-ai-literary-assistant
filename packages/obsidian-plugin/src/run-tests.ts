@@ -1,4 +1,5 @@
 import {
+  testSlashCommandDefinitionPreservesLiteralMetadata,
   testHelpMarkdownContainsAvailableCommands,
   testSlashCommandRegistryContainsHelp,
   testTestLlmBypassesDefaultTier,
@@ -9,8 +10,36 @@ import {
   testSlashCommandParsing,
   testUnknownSlashCommandHandling
 } from "./chat/__tests__/ChatRouter.test";
+import {
+  testChapterMetadataBackupPath,
+  testChapterMetadataBackupCreationFailurePreventsWrite,
+  testChapterMetadataBackupUsesAdapterForHiddenFolder,
+  testChapterMetadataCleanupFailureDoesNotRestore,
+  testChapterMetadataMergeDefaultsMissingFields,
+  testChapterMetadataMergeProtectsFields,
+  testChapterMetadataMergePreservesUnknownStatus,
+  testChapterMetadataPrepareFrontmatterUpdatesTimestamp,
+  testChapterMetadataSchemaRejectsInvalidShape,
+  testChapterMetadataStructuredExtraction,
+  testChapterMetadataValidation,
+  testChapterMetadataWriteFailureRestoresBackup,
+  testChapterMetadataWorkflowCreatesReview,
+  testChapterTextExtraction
+} from "./chapter-metadata/__tests__/chapterMetadata.test";
+import {
+  testPromptLoaderComposesPrompts,
+  testPromptLoaderLoadsMarkdownPrompt,
+  testPromptLoaderMissingPromptReturnsError,
+  testPromptFactoryBuildsChapterTextInput,
+  testPromptLintRejectsMarkdownCodeFences,
+  testPromptLintRequiresOutputContract
+} from "./core/__tests__/promptLoader.test";
 import { testMainMenuContainsInitialViews } from "./definitions/__tests__/mainMenuItems.test";
-import { testQuickActionPrefersSlashCommand } from "./definitions/__tests__/quickActions.test";
+import {
+  testQuickActionMetadataFallsBackToCommand,
+  testQuickActionPassesPresetArgs,
+  testQuickActionPrefersSlashCommand
+} from "./definitions/__tests__/quickActions.test";
 import {
   testMissingApiKeyValidation,
   testMissingOllamaEndpointValidation
@@ -29,7 +58,12 @@ import {
   testChatRouteResultCreatesProgrammaticMarkdown,
   testChatSubmissionCreatesUserAndLoadingMessages
 } from "./ui/__tests__/chatSubmission.test";
-import { testUiDoesNotImportAiSdk } from "./ui/__tests__/uiBoundary.test";
+import { testToolOutputStateSetAndClear } from "./ui/__tests__/toolOutputState.test";
+import {
+  testPromptFactoryDoesNotImportRuntimeBoundaries,
+  testUiDoesNotImportAiSdk,
+  testUiStylesUseModularCssBundle
+} from "./ui/__tests__/uiBoundary.test";
 
 type TestCase = () => Promise<unknown>;
 
@@ -37,6 +71,7 @@ const toAsync = (test: () => unknown): TestCase => () => Promise.resolve().then(
 
 const tests: TestCase[] = [
   toAsync(testSlashCommandRegistryContainsHelp),
+  toAsync(testSlashCommandDefinitionPreservesLiteralMetadata),
   toAsync(testHelpMarkdownContainsAvailableCommands),
   testTestLlmValidatesTierArgument,
   testTestLlmBypassesDefaultTier,
@@ -50,12 +85,37 @@ const tests: TestCase[] = [
   toAsync(testSlashCommandParsing),
   testUnknownSlashCommandHandling,
   testGenericChatUsesDefaultTier,
+  toAsync(testChapterMetadataMergeProtectsFields),
+  toAsync(testChapterMetadataMergeDefaultsMissingFields),
+  toAsync(testChapterMetadataMergePreservesUnknownStatus),
+  toAsync(testChapterMetadataPrepareFrontmatterUpdatesTimestamp),
+  toAsync(testChapterMetadataValidation),
+  toAsync(testChapterMetadataSchemaRejectsInvalidShape),
+  testChapterMetadataStructuredExtraction,
+  toAsync(testChapterTextExtraction),
+  toAsync(testChapterMetadataBackupPath),
+  testChapterMetadataBackupUsesAdapterForHiddenFolder,
+  testChapterMetadataWorkflowCreatesReview,
+  testChapterMetadataBackupCreationFailurePreventsWrite,
+  testChapterMetadataWriteFailureRestoresBackup,
+  testChapterMetadataCleanupFailureDoesNotRestore,
+  toAsync(testPromptLoaderLoadsMarkdownPrompt),
+  toAsync(testPromptLoaderComposesPrompts),
+  toAsync(testPromptLoaderMissingPromptReturnsError),
+  toAsync(testPromptFactoryBuildsChapterTextInput),
+  toAsync(testPromptLintRejectsMarkdownCodeFences),
+  toAsync(testPromptLintRequiresOutputContract),
   toAsync(testMainMenuContainsInitialViews),
   testQuickActionPrefersSlashCommand,
+  toAsync(testQuickActionMetadataFallsBackToCommand),
+  testQuickActionPassesPresetArgs,
   toAsync(testAttachmentStateAddRemove),
   toAsync(testChatSubmissionCreatesUserAndLoadingMessages),
   toAsync(testChatRouteResultCreatesProgrammaticMarkdown),
-  toAsync(testUiDoesNotImportAiSdk)
+  toAsync(testToolOutputStateSetAndClear),
+  toAsync(testUiDoesNotImportAiSdk),
+  toAsync(testUiStylesUseModularCssBundle),
+  toAsync(testPromptFactoryDoesNotImportRuntimeBoundaries)
 ];
 
 const runTests = async (): Promise<void> => {

@@ -3,8 +3,10 @@ import { type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import type { SlashCommandResult } from "../../commands/slashCommandTypes";
+import type { ToolOutput } from "../../chapter-metadata/chapterMetadataTypes";
 import { executeQuickAction } from "../../definitions/executeQuickAction";
 import { quickActions } from "../../definitions/quickActions";
+import { resolveQuickActionNameKey } from "../../definitions/quickActionMetadata";
 import type { QuickActionItem } from "../../definitions/quickActionTypes";
 import type LiteraryAssistantPlugin from "../../main";
 import { ObsidianIcon } from "../ObsidianIcon";
@@ -14,25 +16,42 @@ import { ObsidianIcon } from "../ObsidianIcon";
  */
 export const QuickActionsView = ({
   app,
-  plugin,
-  onProgrammaticMarkdown
+  onProgrammaticMarkdown,
+  onToolOutput,
+  plugin
 }: {
   readonly app: App;
   readonly plugin: LiteraryAssistantPlugin;
   readonly onProgrammaticMarkdown: (markdown: string) => void;
+  readonly onToolOutput: (output: ToolOutput) => void;
 }): ReactElement => {
   const { t } = useTranslation();
 
   const handleExecute = async (item: QuickActionItem): Promise<void> => {
-    const result = await executeQuickAction(item, {
-      app,
-      settings: plugin.settings,
-      showModal: true,
-      t
-    });
+    let result;
+
+    try {
+      result = await executeQuickAction(item, {
+        app,
+        settings: plugin.settings,
+        showModal: true,
+        t
+      });
+    } catch {
+      onToolOutput({
+        kind: "error",
+        message: t("chapterMetadata.errors.extractionFailedWithDebug")
+      });
+      return;
+    }
 
     if (isMarkdownResult(result)) {
       onProgrammaticMarkdown(result.markdown);
+      return;
+    }
+
+    if (isToolOutputResult(result)) {
+      onToolOutput(result.output);
     }
   };
 
@@ -57,7 +76,7 @@ export const QuickActionsView = ({
                   type="button"
                 >
                   <ObsidianIcon icon={item.icon} />
-                  <span>{t(item.nameKey)}</span>
+                  <span>{t(resolveQuickActionNameKey(quickActionItem))}</span>
                 </button>
               );
             })}
@@ -68,6 +87,14 @@ export const QuickActionsView = ({
   );
 };
 
-const isMarkdownResult = (result: SlashCommandResult | undefined): result is SlashCommandResult => (
+const isMarkdownResult = (
+  result: SlashCommandResult | undefined
+): result is Extract<SlashCommandResult, { kind: "markdown" }> => (
   result?.kind === "markdown"
+);
+
+const isToolOutputResult = (
+  result: SlashCommandResult | undefined
+): result is Extract<SlashCommandResult, { kind: "tool-output" }> => (
+  result?.kind === "tool-output"
 );

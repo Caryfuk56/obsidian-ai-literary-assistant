@@ -107,6 +107,10 @@
     }
   },
   "slashCommands": {
+    "chapterMetadata": {
+      "name": "Metadata kapitoly",
+      "description": "Analyzuje metadata aktuální kapitoly."
+    },
     "help": {
       "name": "Nápověda",
       "description": "Zobrazí dostupné lomítkové příkazy.",
@@ -124,9 +128,62 @@
     "general": {
       "name": "Obecné"
     },
+    "chapterMetadata": {
+      "name": "Analyzovat aktuální kapitolu",
+      "description": "Vytěží metadata kapitoly z aktivního markdownového souboru"
+    },
     "help": {
       "name": "Nápověda",
       "description": "Zobrazit nápovědu k lomítkovým příkazům"
+    }
+  },
+  "toolOutput": {
+    "ariaLabel": "Výstup nástroje"
+  },
+  "chapterMetadata": {
+    "title": "Metadata kapitoly",
+    "actions": {
+      "approveAndWrite": "Schválit a zapsat",
+      "cancel": "Zrušit",
+      "edit": "Upravit"
+    },
+    "fields": {
+      "type": "Typ",
+      "id": "ID",
+      "metadata_created": "Metadata vytvořena",
+      "metadata_updated": "Metadata aktualizována",
+      "title": "Název",
+      "summary": "Shrnutí",
+      "pov": "Úhel pohledu",
+      "status": "Stav",
+      "narrative_time": "Čas vyprávění",
+      "timeline_position": "Pozice v časové ose",
+      "spoiler_level": "Úroveň spoilerů",
+      "linked_plotlines": "Propojené dějové linky",
+      "linked_characters": "Propojené postavy",
+      "linked_organizations": "Propojené organizace",
+      "linked_systems": "Propojené systémy",
+      "linked_locations": "Propojená místa",
+      "linked_items": "Propojené předměty",
+      "linked_history": "Propojená historie"
+    },
+    "errors": {
+      "noActiveMarkdownFile": "Nebyl nalezen aktivní markdownový soubor",
+      "extractionFailed": "Vytěžení metadat selhalo",
+      "invalidAiResponse": "Neplatná odpověď AI",
+      "modelTierNotConfigured": "Úroveň modelu není nastavena",
+      "extractionFailedWithDebug": "Vytěžení metadat selhalo. Podrobnosti jsou v ladicím logu.",
+      "promptLoadFailed": "Prompt pro vytěžení metadat se nepodařilo načíst.",
+      "invalidReviewState": "Neplatný stav kontroly metadat",
+      "backupCreationFailed": "Nepodařilo se vytvořit zálohu metadat. Kapitola nebyla upravena.",
+      "backupCleanupFailed": "Metadata byla zapsána, ale úklid zálohy selhal. Záloha zůstala na {{path}}",
+      "writeFailed": "Zápis metadat selhal.",
+      "writeFailedRestored": "Zápis metadat selhal. Metadata byla obnovena ze zálohy",
+      "writeFailedBackupKept": "Zápis metadat selhal a automatické obnovení se nezdařilo. Záloha zůstala na {{path}}"
+    },
+    "notices": {
+      "metadataWritten": "Metadata zapsána úspěšně",
+      "metadataRestored": "Metadata obnovena ze zálohy"
     }
   },
   "chat": {

@@ -1,12 +1,12 @@
 import type { TFunction } from "i18next";
 
-import type { SlashCommandContext, SlashCommandDefinition, SlashCommandResult } from "./slashCommandTypes";
+import type { SlashCommandContext, SlashCommandResult } from "./slashCommandTypes";
 
 /**
  * Creates translated markdown documentation for the registered slash commands.
  */
 export const generateHelpMarkdown = (
-  commands: Readonly<Record<string, Pick<SlashCommandDefinition, "descriptionKey" | "name" | "nameKey">>>,
+  commands: Readonly<Record<string, Readonly<{ descriptionKey: string; name: string; nameKey: string }>>>,
   t: TFunction
 ): string => {
   const commandLines = Object.values(commands).map((command) => {

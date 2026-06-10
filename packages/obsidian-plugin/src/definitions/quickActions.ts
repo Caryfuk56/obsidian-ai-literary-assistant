@@ -8,10 +8,13 @@ export const quickActions = [
     id: "general",
     items: [
       {
-        descriptionKey: "quickActions.help.description",
+        icon: "file-search",
+        id: "chapter-metadata",
+        slashCommand: "/chapter_metadata"
+      },
+      {
         icon: "help-circle",
         id: "help",
-        nameKey: "quickActions.help.name",
         slashCommand: "/help"
       }
     ],

@@ -1,5 +1,6 @@
 import { generateHelpMarkdown } from "../helpCommand";
 import { slashCommands } from "../slashCommands";
+import { defineSlashCommand } from "../commandDefinitionTypes";
 import { executeTestLlmCommand, TEST_LLM_PROMPT } from "../testLlmCommand";
 import { DEFAULT_AURELIUS_SETTINGS, cloneSettings } from "../../settings/defaultSettings";
 import { assert, assertEqual } from "../../testUtils";
@@ -26,6 +27,24 @@ const t = ((key: string): string => {
 export const testSlashCommandRegistryContainsHelp = (): void => {
   assert(Object.hasOwn(slashCommands, "/help"), "Expected slash command registry to contain /help.");
   assert(Object.hasOwn(slashCommands, "/test-llm"), "Expected slash command registry to contain /test-llm.");
+  assert(Object.hasOwn(slashCommands, "/chapter_metadata"), "Expected slash command registry to contain /chapter_metadata.");
+  assertEqual(slashCommands["/chapter_metadata"].promptRecipe.tasks[0], "chapter-metadata", "Expected metadata command prompt recipe");
+};
+
+/**
+ * Verifies command definitions preserve literal command metadata.
+ */
+export const testSlashCommandDefinitionPreservesLiteralMetadata = (): void => {
+  const fixture = defineSlashCommand({
+    descriptionKey: "fixture.description",
+    execute: () => undefined,
+    id: "fixture",
+    name: "/fixture",
+    nameKey: "fixture.name"
+  });
+
+  assertEqual(fixture.name, "/fixture", "Expected definition helper to preserve literal command name");
+  assertEqual(fixture.id, "fixture", "Expected definition helper to preserve literal command id");
 };
 
 /**
@@ -41,7 +60,7 @@ export const testTestLlmValidatesTierArgument = async (): Promise<void> => {
     rawInput: "/test-llm"
   });
 
-  assertEqual(result.markdown, "Invalid tier.", "Expected missing tier to return usage guidance");
+  assertEqual(result.kind === "markdown" ? result.markdown : "", "Invalid tier.", "Expected missing tier to return usage guidance");
 };
 
 /**
@@ -72,7 +91,7 @@ export const testTestLlmBypassesDefaultTier = async (): Promise<void> => {
 
   assertEqual(capturedTier, "local", "Expected /test-llm to use the requested tier");
   assertEqual(capturedPrompt, TEST_LLM_PROMPT, "Expected /test-llm to send the exact test prompt");
-  assertEqual(result.markdown, "Connection successful", "Expected test result markdown");
+  assertEqual(result.kind === "markdown" ? result.markdown : "", "Connection successful", "Expected test result markdown");
 };
 
 /**

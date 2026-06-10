@@ -1,0 +1,28 @@
+.ai-literary-assistant-menu {
+  align-items: center;
+  border-bottom: 1px solid var(--background-modifier-border);
+  display: flex;
+  flex: 0 0 auto;
+  gap: 4px;
+  padding: 6px;
+}
+
+.ai-literary-assistant-menu-main {
+  display: flex;
+  flex: 1 1 auto;
+  gap: 4px;
+  min-width: 0;
+}
+
+.ai-literary-assistant-icon-button {
+  align-items: center;
+  display: inline-flex;
+  height: 30px;
+  justify-content: center;
+  width: 30px;
+}
+
+.ai-literary-assistant-icon-button.is-active {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}

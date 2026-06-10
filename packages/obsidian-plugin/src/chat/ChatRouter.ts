@@ -1,6 +1,7 @@
 import { slashCommands } from "../commands/slashCommands";
 import type { SlashCommandName } from "../commands/slashCommandTypes";
 import { executeSlashCommand } from "../commands/executeSlashCommand";
+import type { ChapterMetadataObjectGenerator } from "../chapter-metadata/chapterMetadataExtraction";
 import { generateChatResponse } from "../llm/generateChatResponse";
 import { LLMClientFactory } from "../llm/llmClientFactory";
 import type { ModelTier } from "../settings/settingsTypes";
@@ -26,7 +27,8 @@ export type GenerateChatResponseAdapter = typeof generateChatResponse;
 export class ChatRouter {
   public constructor(
     private readonly context: ChatRouterContext,
-    private readonly generateResponse: GenerateChatResponseAdapter = generateChatResponse
+    private readonly generateResponse: GenerateChatResponseAdapter = generateChatResponse,
+    private readonly generateChapterMetadata?: ChapterMetadataObjectGenerator
   ) {}
 
   /**
@@ -62,11 +64,16 @@ export class ChatRouter {
       };
     }
 
-    const result = await executeSlashCommand(parsedCommand.commandName, {
+    const commandContext = {
       app: this.context.app,
+      generateResponse: this.generateResponse,
       settings: this.context.settings,
       showModal: false,
       t: this.context.t
+    };
+    const result = await executeSlashCommand(parsedCommand.commandName, {
+      ...commandContext,
+      ...(this.generateChapterMetadata ? { generateChapterMetadata: this.generateChapterMetadata } : {})
     }, {
       args: parsedCommand.args,
       rawInput: parsedCommand.rawInput
@@ -74,6 +81,10 @@ export class ChatRouter {
 
     if (!result) {
       return { content: "", kind: "programmatic-markdown" };
+    }
+
+    if (result.kind === "tool-output") {
+      return { kind: "tool-output", output: result.output };
     }
 
     return { content: result.markdown, kind: "programmatic-markdown" };

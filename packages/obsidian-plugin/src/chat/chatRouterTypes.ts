@@ -1,6 +1,7 @@
 import type { App } from "obsidian";
 import type { TFunction } from "i18next";
 
+import type { ToolOutput } from "../chapter-metadata/chapterMetadataTypes";
 import type { AureliusSettings } from "../settings/settingsTypes";
 
 /**
@@ -9,7 +10,8 @@ import type { AureliusSettings } from "../settings/settingsTypes";
 export type ChatRouteResult =
   | { content: string; kind: "assistant-markdown" }
   | { content: string; kind: "programmatic-markdown" }
-  | { kind: "error-markdown"; message: string };
+  | { kind: "error-markdown"; message: string }
+  | { kind: "tool-output"; output: ToolOutput };
 
 /**
  * Dependencies needed by the chat router.
@@ -19,4 +21,3 @@ export interface ChatRouterContext {
   settings: AureliusSettings;
   t: TFunction;
 }
-

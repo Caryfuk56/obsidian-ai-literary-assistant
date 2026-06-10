@@ -91,5 +91,11 @@ export const chatRouteResultToMessage = (result: ChatRouteResult, id: string): C
         markdown: result.message,
         type: "error"
       };
+    case "tool-output":
+      return {
+        id,
+        markdown: "",
+        type: "programmatic-markdown"
+      };
   }
 };

@@ -113,6 +113,16 @@ Responsibilities:
 * Update changelogs.
 * Update codebase maps and developer documentation.
 
+### 2.5 Consultant
+
+Driven by `.codex/CONSULTANT.md`
+
+Responsibilities:
+
+* consult architectural designs
+* propose solutions
+* validate solutions with code base
+
 ---
 
 ## 4. Execution Guardrails
