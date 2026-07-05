@@ -1,22 +1,10 @@
-/**
- * Allowed author workflow states for a chapter.
- */
-export type ChapterStatus =
-  | "writing"
-  | "draft"
-  | "stylistic_correction"
-  | "language_correction"
-  | "done";
+import type { ChapterStatus } from "../core/types/metadata.types";
 
 /**
- * Coarse narrative time values supported in chapter metadata.
- */
-export type NarrativeTime = "ráno" | "den" | "večer" | "noc" | "neurčeno";
-
-/**
- * Complete chapter frontmatter metadata contract.
+ * Complete chapter frontmatter metadata contract written by the chapter command.
  */
 export interface ChapterMetadata {
+  createdAt: string;
   id: string;
   linked_characters: string[];
   linked_history: string[];
@@ -25,16 +13,14 @@ export interface ChapterMetadata {
   linked_organizations: string[];
   linked_plotlines: string[];
   linked_systems: string[];
-  metadata_created: string;
-  metadata_updated: string;
-  narrative_time: NarrativeTime;
+  plotlines: string[];
   pov: string;
-  spoiler_level: string;
-  status: string;
+  status: ChapterStatus;
   summary: string;
-  timeline_position: string;
   title: string;
-  type: string;
+  type: "chapter";
+  updatedAt: string;
+  version: string;
 }
 
 /**
@@ -48,7 +34,7 @@ export interface ChapterMetadataSuggestion {
   linked_organizations: string[];
   linked_plotlines: string[];
   linked_systems: string[];
-  narrative_time: NarrativeTime;
+  plotlines: string[];
   pov: string;
   summary: string;
   title: string;

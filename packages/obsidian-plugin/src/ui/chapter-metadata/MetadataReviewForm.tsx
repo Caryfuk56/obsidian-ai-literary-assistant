@@ -1,17 +1,20 @@
 import { type ChangeEvent, type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import {
-  CHAPTER_METADATA_REVIEW_FIELDS,
-  CHAPTER_STATUS_VALUES,
-  NARRATIVE_TIME_VALUES
-} from "../../chapter-metadata/chapterMetadataContract";
+import { CHAPTER_STATUS_VALUES } from "../../chapter-metadata/chapterMetadataContract";
 import {
   formatArrayFieldText,
   isChapterMetadataArrayField,
   parseArrayFieldText
 } from "../../chapter-metadata/chapterMetadataMerge";
 import type { ChapterMetadata, ChapterMetadataReviewState } from "../../chapter-metadata/chapterMetadataTypes";
+import { formatMetadataDisplayValue, valueToText } from "../metadata/metadataDisplay";
+import {
+  getChapterMetadataReviewFieldDefinitions,
+  getChapterStatusLabelKey,
+  updateChapterReviewMetadataField,
+  type ChapterMetadataReviewFieldDefinition
+} from "./chapterMetadataReviewFields";
 
 /**
  * Interactive review form for approved chapter metadata.
@@ -25,14 +28,21 @@ export const MetadataReviewForm = ({
   readonly onCancel: () => void;
   readonly review: ChapterMetadataReviewState;
 }): ReactElement => {
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [localReview, setLocalReview] = useState(review);
+  const fieldDefinitions = getChapterMetadataReviewFieldDefinitions();
 
   useEffect(() => {
     setLocalReview(review);
   }, [review]);
 
   const toggleEditable = (field: keyof ChapterMetadata): void => {
+    const fieldDefinition = fieldDefinitions.find((definition) => definition.key === field);
+
+    if (!fieldDefinition?.editable) {
+      return;
+    }
+
     setLocalReview((currentReview) => ({
       ...currentReview,
       editableFields: {
@@ -45,10 +55,7 @@ export const MetadataReviewForm = ({
   const updateField = (field: keyof ChapterMetadata, value: ChapterMetadata[keyof ChapterMetadata]): void => {
     setLocalReview((currentReview) => ({
       ...currentReview,
-      pendingMetadata: {
-        ...currentReview.pendingMetadata,
-        [field]: value
-      }
+      pendingMetadata: updateChapterReviewMetadataField(currentReview.pendingMetadata, field, value)
     }));
   };
 
@@ -62,14 +69,15 @@ export const MetadataReviewForm = ({
     >
       <h2>{t("chapterMetadata.title")}</h2>
       <div className="ai-metadata-review-fields">
-        {CHAPTER_METADATA_REVIEW_FIELDS.map((field) => (
+        {fieldDefinitions.map((fieldDefinition) => (
           <MetadataFieldRow
-            editable={localReview.editableFields[field] === true}
-            field={field}
-            key={field}
+            editable={fieldDefinition.editable && localReview.editableFields[fieldDefinition.key] === true}
+            fieldDefinition={fieldDefinition}
+            key={fieldDefinition.key}
+            language={i18n.resolvedLanguage ?? i18n.language}
             metadata={localReview.pendingMetadata}
             onToggleEdit={() => {
-              toggleEditable(field);
+              toggleEditable(fieldDefinition.key);
             }}
             onUpdate={updateField}
           />
@@ -85,31 +93,37 @@ export const MetadataReviewForm = ({
 
 const MetadataFieldRow = ({
   editable,
-  field,
+  fieldDefinition,
+  language,
   metadata,
   onToggleEdit,
   onUpdate
 }: {
   readonly editable: boolean;
-  readonly field: keyof ChapterMetadata;
+  readonly fieldDefinition: ChapterMetadataReviewFieldDefinition;
+  readonly language: string | undefined;
   readonly metadata: ChapterMetadata;
   readonly onToggleEdit: () => void;
   readonly onUpdate: (field: keyof ChapterMetadata, value: ChapterMetadata[keyof ChapterMetadata]) => void;
 }): ReactElement => {
   const { t } = useTranslation();
+  const field = fieldDefinition.key;
   const value = metadata[field];
 
   return (
     <div className="ai-metadata-field-row">
       <div className="ai-metadata-field-header">
-        <label htmlFor={`metadata-${field}`}>{t(`chapterMetadata.fields.${field}`)}</label>
-        <button className="clickable-icon" onClick={onToggleEdit} type="button">
-          {t("chapterMetadata.actions.edit")}
-        </button>
+        <label htmlFor={`metadata-${field}`}>{t(fieldDefinition.labelKey)}</label>
+        {fieldDefinition.editable && (
+          <button className="clickable-icon" onClick={onToggleEdit} type="button">
+            {t("chapterMetadata.actions.edit")}
+          </button>
+        )}
       </div>
       <MetadataFieldInput
         editable={editable}
-        field={field}
+        fieldDefinition={fieldDefinition}
+        language={language}
         onUpdate={onUpdate}
         value={value}
       />
@@ -119,15 +133,28 @@ const MetadataFieldRow = ({
 
 const MetadataFieldInput = ({
   editable,
-  field,
+  fieldDefinition,
+  language,
   onUpdate,
   value
 }: {
   readonly editable: boolean;
-  readonly field: keyof ChapterMetadata;
+  readonly fieldDefinition: ChapterMetadataReviewFieldDefinition;
+  readonly language: string | undefined;
   readonly onUpdate: (field: keyof ChapterMetadata, value: ChapterMetadata[keyof ChapterMetadata]) => void;
   readonly value: ChapterMetadata[keyof ChapterMetadata];
 }): ReactElement => {
+  const { t } = useTranslation();
+  const field = fieldDefinition.key;
+
+  if (!fieldDefinition.editable) {
+    return (
+      <span className="ai-metadata-readonly-value" id={`metadata-${field}`}>
+        {formatMetadataDisplayValue({ key: field, language, value })}
+      </span>
+    );
+  }
+
   if (field === "status") {
     const statusValue = typeof value === "string" ? value : "";
     const hasCustomStatus = statusValue !== "" && !CHAPTER_STATUS_VALUES.includes(statusValue as never);
@@ -143,24 +170,7 @@ const MetadataFieldInput = ({
       >
         {hasCustomStatus && <option value={statusValue}>{statusValue}</option>}
         {CHAPTER_STATUS_VALUES.map((status) => (
-          <option key={status} value={status}>{status}</option>
-        ))}
-      </select>
-    );
-  }
-
-  if (field === "narrative_time") {
-    return (
-      <select
-        disabled={!editable}
-        id={`metadata-${field}`}
-        onChange={(event) => {
-          onUpdate("narrative_time", event.target.value);
-        }}
-        value={value}
-      >
-        {NARRATIVE_TIME_VALUES.map((narrativeTime) => (
-          <option key={narrativeTime} value={narrativeTime}>{narrativeTime}</option>
+          <option key={status} value={status}>{t(getChapterStatusLabelKey(status))}</option>
         ))}
       </select>
     );
@@ -191,7 +201,7 @@ const MetadataFieldInput = ({
           onUpdate(field, event.target.value);
         }}
         rows={3}
-        value={value}
+        value={valueToText(value)}
       />
     );
   }
@@ -204,7 +214,7 @@ const MetadataFieldInput = ({
         onUpdate(field, event.target.value);
       }}
       type="text"
-      value={value}
+      value={valueToText(value)}
     />
   );
 };

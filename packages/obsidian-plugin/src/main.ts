@@ -1,6 +1,7 @@
 import { Notice, Plugin } from "obsidian";
 
 import { initializeI18n, i18n } from "./locales/i18n";
+import { MetadataIndexesService } from "./core/metadata/metadataIndexService";
 import { DEFAULT_AURELIUS_SETTINGS, mergeSettings } from "./settings/defaultSettings";
 import { AureliusSettingTab } from "./settings/settingsTab";
 import type { AureliusSettings } from "./settings/settingsTypes";
@@ -11,10 +12,13 @@ import { LITERARY_ASSISTANT_VIEW_TYPE, LiteraryAssistantView } from "./ui/Litera
  */
 export default class LiteraryAssistantPlugin extends Plugin {
   public override settings: AureliusSettings = DEFAULT_AURELIUS_SETTINGS;
+  public metadataIndexesService!: MetadataIndexesService;
 
   public override async onload(): Promise<void> {
     await initializeI18n();
     await this.loadSettings();
+    this.metadataIndexesService = new MetadataIndexesService(this.app);
+    await this.metadataIndexesService.create();
 
     this.registerView(
       LITERARY_ASSISTANT_VIEW_TYPE,

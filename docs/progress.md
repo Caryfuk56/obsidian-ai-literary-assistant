@@ -26,3 +26,6 @@
 - Added `PromptFactory`, typed prompt recipes, soul/task prompt loading, and JSON workflow prompt lint before model calls.
 - Moved chapter metadata prompt files to the soul/task prompt structure and kept model output validation as the programmatic domain truth.
 - Replaced runtime TypeScript stylesheet injection with modular CSS files bundled by esbuild into `styles.css`.
+- Planned and implemented runtime metadata indexes derived from Markdown frontmatter, dynamic active-file metadata editing, multiselect reference resolution, and configuration-driven sidebar panel rendering.
+- Implemented Metadata Panel Improvements: active-file synchronized metadata refresh, consistent active path headers, no-frontmatter Create Metadata controls, localized metadata type and option labels, display-only localized date formatting, and dirty-state Save enablement.
+- Implemented Metadata Panel Review Fixes: split metadata UI modules, hid Create Metadata while chapter review is pending, refreshed metadata after approved writes, protected chapter review system fields, fixed review i18n/date display, and added focused helper tests.

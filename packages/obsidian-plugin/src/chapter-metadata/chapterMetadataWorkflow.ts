@@ -60,6 +60,7 @@ export const createChapterMetadataReview = async ({
   const originalFrontmatter = app.metadataCache.getFileCache(activeFileResult.file)?.frontmatter ?? {};
   const pendingMetadata = mergeChapterMetadataSuggestion({
     existingFrontmatter: originalFrontmatter,
+    fallbackTitle: activeFileResult.file.basename,
     now,
     suggestion: extractionResult.metadata
   });

@@ -1,17 +1,18 @@
 import {
   CHAPTER_METADATA_ARRAY_FIELDS,
   CHAPTER_METADATA_SUGGESTION_STRING_FIELDS,
-  isNarrativeTime
+  isChapterStatus
 } from "./chapterMetadataContract";
 import type { ChapterMetadata, ChapterMetadataSuggestion } from "./chapterMetadataTypes";
 import { validateChapterMetadataSuggestionObject } from "./chapterMetadataSchema";
+import { ChapterMetadataSchema } from "../core/metadata/metadataSchema";
 
 /**
  * Result of strict AI metadata validation.
  */
 export type ChapterMetadataValidationResult =
   | { ok: true; suggestion: ChapterMetadataSuggestion }
-  | { code: "invalid-json" | "invalid-shape" | "invalid-status" | "invalid-narrative-time"; ok: false };
+  | { code: "invalid-json" | "invalid-shape" | "invalid-status"; ok: false };
 
 /**
  * Parses and validates raw model output as a chapter metadata suggestion.
@@ -29,12 +30,6 @@ export const parseChapterMetadataSuggestion = (rawOutput: string): ChapterMetada
     return { code: "invalid-shape", ok: false };
   }
 
-  const narrativeTime = parsed["narrative_time"] ?? "neurčeno";
-
-  if (!isNarrativeTime(narrativeTime)) {
-    return { code: "invalid-narrative-time", ok: false };
-  }
-
   const suggestion: ChapterMetadataSuggestion = {
     linked_characters: [],
     linked_history: [],
@@ -43,7 +38,7 @@ export const parseChapterMetadataSuggestion = (rawOutput: string): ChapterMetada
     linked_organizations: [],
     linked_plotlines: [],
     linked_systems: [],
-    narrative_time: narrativeTime,
+    plotlines: [],
     pov: "",
     summary: "",
     title: ""
@@ -82,18 +77,18 @@ export const parseChapterMetadataSuggestion = (rawOutput: string): ChapterMetada
  * Validates complete approved chapter metadata before frontmatter writing.
  */
 export const validateApprovedChapterMetadata = (metadata: ChapterMetadata): ChapterMetadataValidationResult => {
-  if (typeof metadata.status !== "string" || metadata.status.trim() === "") {
+  if (!isChapterStatus(metadata.status)) {
     return { code: "invalid-status", ok: false };
-  }
-
-  if (!isNarrativeTime(metadata.narrative_time)) {
-    return { code: "invalid-narrative-time", ok: false };
   }
 
   for (const field of CHAPTER_METADATA_ARRAY_FIELDS) {
     if (!Array.isArray(metadata[field]) || !metadata[field].every((item) => typeof item === "string")) {
       return { code: "invalid-shape", ok: false };
     }
+  }
+
+  if (!ChapterMetadataSchema.safeParse(metadata).success) {
+    return { code: "invalid-shape", ok: false };
   }
 
   return {
@@ -106,7 +101,7 @@ export const validateApprovedChapterMetadata = (metadata: ChapterMetadata): Chap
       linked_organizations: metadata.linked_organizations,
       linked_plotlines: metadata.linked_plotlines,
       linked_systems: metadata.linked_systems,
-      narrative_time: metadata.narrative_time,
+      plotlines: metadata.plotlines,
       pov: metadata.pov,
       summary: metadata.summary,
       title: metadata.title

@@ -94,6 +94,10 @@
       "name": "Chat",
       "description": "Open chat"
     },
+    "metadata": {
+      "name": "Metadata",
+      "description": "Open metadata view"
+    },
     "quickActions": {
       "name": "Quick Actions",
       "description": "Open quick actions"
@@ -140,6 +144,154 @@
   "toolOutput": {
     "ariaLabel": "Tool output"
   },
+  "metadataTypes": {
+    "chapter": "Chapter",
+    "character": "Character",
+    "history": "History",
+    "item": "Item",
+    "location": "Location",
+    "organization": "Organization",
+    "plotline": "Plotline",
+    "routing": "Routing",
+    "structure": "Structure",
+    "synopsis": "Synopsis",
+    "system": "System",
+    "theme": "Theme",
+    "timeline": "Timeline"
+  },
+  "metadataOptions": {
+    "chapterStatus": {
+      "not_started": "Not started",
+      "outline": "Outline",
+      "draft": "Draft",
+      "revision": "Revision",
+      "editing": "Editing",
+      "final": "Final"
+    },
+    "relevance": {
+      "major": "Major",
+      "supporting": "Supporting",
+      "background": "Background"
+    },
+    "projectStatus": {
+      "draft": "Draft",
+      "active": "Active",
+      "stable": "Stable"
+    },
+    "characterRole": {
+      "protagonist": "Protagonist",
+      "antagonist": "Antagonist",
+      "support": "Support"
+    },
+    "characterImportance": {
+      "major": "Major",
+      "minor": "Minor",
+      "cameo": "Cameo"
+    },
+    "truthStatus": {
+      "public": "Public",
+      "hidden": "Hidden",
+      "contested": "Contested"
+    },
+    "secrecyLevel": {
+      "public": "Public",
+      "restricted": "Restricted",
+      "secret": "Secret"
+    },
+    "itemType": {
+      "artifact": "Artifact",
+      "document": "Document",
+      "evidence": "Evidence",
+      "technology": "Technology",
+      "relic": "Relic",
+      "personal": "Personal"
+    },
+    "storyScope": {
+      "short_story": "Short story",
+      "novella": "Novella",
+      "novel": "Novel",
+      "series": "Series"
+    },
+    "narrativeMode": {
+      "first_person": "First person",
+      "limited_third": "Limited third",
+      "multiple_pov": "Multiple POV"
+    }
+  },
+  "metadataView": {
+    "ariaLabel": "Metadata",
+    "title": "Metadata",
+    "emptyPath": "No active file",
+    "actions": {
+      "editAll": "Edit all",
+      "generateByAi": "Generate by AI",
+      "refresh": "Refresh",
+      "removeValue": "Remove {{value}}",
+      "save": "Save",
+      "stopEditing": "Stop editing"
+    },
+    "create": {
+      "button": "Create Metadata",
+      "failed": "Metadata generation failed.",
+      "generating": "Generating metadata automatically...",
+      "loadingLabel": "Generating metadata",
+      "notImplemented": "Not implemented yet.",
+      "title": "Create Metadata",
+      "typeLabel": "Metadata type"
+    },
+    "fields": {
+      "aliases": "Aliases",
+      "category": "Category",
+      "coreTheme": "Core theme",
+      "createdAt": "Created",
+      "currentHolder": "Current holder",
+      "eventTypes": "Event types",
+      "genre": "Genre",
+      "id": "ID",
+      "importance": "Importance",
+      "itemType": "Item type",
+      "language": "Language",
+      "locationType": "Location type",
+      "narrativeMode": "Narrative mode",
+      "organizationType": "Organization type",
+      "plotlines": "Plotlines",
+      "pov": "POV",
+      "povRelevance": "POV relevance",
+      "publicDescription": "Public description",
+      "relevance": "Relevance",
+      "role": "Role",
+      "routingVersion": "Routing version",
+      "secrecyLevel": "Secrecy level",
+      "setting": "Setting",
+      "status": "Status",
+      "storyFunction": "Story function",
+      "storyScope": "Story scope",
+      "storyTitle": "Story title",
+      "summary": "Summary",
+      "systemType": "System type",
+      "targetScope": "Target scope",
+      "theme": "Theme",
+      "timelinePosition": "Timeline position",
+      "title": "Title",
+      "tone": "Tone",
+      "truthStatus": "Truth status",
+      "type": "Type",
+      "updatedAt": "Updated",
+      "version": "Version"
+    },
+    "errors": {
+      "generateFailed": "Metadata generation failed.",
+      "invalidDraft": "Metadata draft is invalid.",
+      "invalidMetadata": "The active file does not contain valid literary metadata.",
+      "noActiveMarkdownFile": "No active Markdown file.",
+      "noFrontmatter": "The active file has no frontmatter.",
+      "placeholderFailed": "Could not create the placeholder file.",
+      "saveFailed": "Metadata save failed."
+    },
+    "notices": {
+      "saved": "Metadata saved."
+    }
+  },
   "chapterMetadata": {
     "title": "Chapter metadata",
     "actions": {
@@ -150,6 +302,9 @@
     "fields": {
       "type": "Type",
       "id": "ID",
+      "version": "Version",
+      "createdAt": "Created",
+      "updatedAt": "Updated",
       "metadata_created": "Metadata created",
       "metadata_updated": "Metadata updated",
       "title": "Title",

@@ -24,6 +24,7 @@ import {
   testChapterMetadataValidation,
   testChapterMetadataWriteFailureRestoresBackup,
   testChapterMetadataWorkflowCreatesReview,
+  testChapterMetadataWorkflowUsesFileNameForBlankTitle,
   testChapterTextExtraction
 } from "./chapter-metadata/__tests__/chapterMetadata.test";
 import {
@@ -34,7 +35,16 @@ import {
   testPromptLintRejectsMarkdownCodeFences,
   testPromptLintRequiresOutputContract
 } from "./core/__tests__/promptLoader.test";
-import { testMainMenuContainsInitialViews } from "./definitions/__tests__/mainMenuItems.test";
+import {
+  testMetadataIndexesServiceBuildsFromVault,
+  testMetadataIndexesServiceSettersReplaceGroups,
+  testMetadataIndexGroupingRoutesRecords,
+  testMetadataIndexMappingUsesAllowedFields
+} from "./core/__tests__/metadataIndexes.test";
+import {
+  testMainMenuContainsInitialViews,
+  testMainMenuViewsHaveSidebarPanels
+} from "./definitions/__tests__/mainMenuItems.test";
 import {
   testQuickActionMetadataFallsBackToCommand,
   testQuickActionPassesPresetArgs,
@@ -58,6 +68,20 @@ import {
   testChatRouteResultCreatesProgrammaticMarkdown,
   testChatSubmissionCreatesUserAndLoadingMessages
 } from "./ui/__tests__/chatSubmission.test";
+import {
+  testMetadataDraftHelpersAreImmutable,
+  testMetadataDateFormatting,
+  testMetadataDraftDirtyState,
+  testActiveMetadataSnapshotDerivation,
+  testChapterReviewFieldDefinitionsProtectSystemFields,
+  testChapterReviewProtectedFieldUpdatesAreIgnored,
+  testMetadataFieldDefinitionsProtectSystemFields,
+  testMetadataFieldEditabilityRequiresEditableDefinition,
+  testMetadataMultiselectReferenceResolution,
+  testMetadataSelectOptionsUseLabelKeys,
+  testMetadataTypeLabelsAreLocalized,
+  testMetadataTypesContainExpectedValues
+} from "./ui/__tests__/metadataView.test";
 import { testToolOutputStateSetAndClear } from "./ui/__tests__/toolOutputState.test";
 import {
   testPromptFactoryDoesNotImportRuntimeBoundaries,
@@ -96,6 +120,7 @@ const tests: TestCase[] = [
   toAsync(testChapterMetadataBackupPath),
   testChapterMetadataBackupUsesAdapterForHiddenFolder,
   testChapterMetadataWorkflowCreatesReview,
+  testChapterMetadataWorkflowUsesFileNameForBlankTitle,
   testChapterMetadataBackupCreationFailurePreventsWrite,
   testChapterMetadataWriteFailureRestoresBackup,
   testChapterMetadataCleanupFailureDoesNotRestore,
@@ -105,11 +130,28 @@ const tests: TestCase[] = [
   toAsync(testPromptFactoryBuildsChapterTextInput),
   toAsync(testPromptLintRejectsMarkdownCodeFences),
   toAsync(testPromptLintRequiresOutputContract),
+  toAsync(testMetadataIndexMappingUsesAllowedFields),
+  toAsync(testMetadataIndexGroupingRoutesRecords),
+  testMetadataIndexesServiceBuildsFromVault,
+  toAsync(testMetadataIndexesServiceSettersReplaceGroups),
   toAsync(testMainMenuContainsInitialViews),
+  toAsync(testMainMenuViewsHaveSidebarPanels),
   testQuickActionPrefersSlashCommand,
   toAsync(testQuickActionMetadataFallsBackToCommand),
   testQuickActionPassesPresetArgs,
   toAsync(testAttachmentStateAddRemove),
+  toAsync(testMetadataFieldDefinitionsProtectSystemFields),
+  toAsync(testMetadataFieldEditabilityRequiresEditableDefinition),
+  toAsync(testMetadataMultiselectReferenceResolution),
+  toAsync(testMetadataDraftHelpersAreImmutable),
+  toAsync(testMetadataTypesContainExpectedValues),
+  toAsync(testMetadataTypeLabelsAreLocalized),
+  toAsync(testMetadataSelectOptionsUseLabelKeys),
+  toAsync(testMetadataDraftDirtyState),
+  toAsync(testMetadataDateFormatting),
+  toAsync(testActiveMetadataSnapshotDerivation),
+  toAsync(testChapterReviewFieldDefinitionsProtectSystemFields),
+  toAsync(testChapterReviewProtectedFieldUpdatesAreIgnored),
   toAsync(testChatSubmissionCreatesUserAndLoadingMessages),
   toAsync(testChatRouteResultCreatesProgrammaticMarkdown),
   toAsync(testToolOutputStateSetAndClear),

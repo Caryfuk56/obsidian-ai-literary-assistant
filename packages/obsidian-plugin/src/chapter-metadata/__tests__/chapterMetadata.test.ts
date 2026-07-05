@@ -6,7 +6,7 @@ import { extractChapterMetadataSuggestion } from "../chapterMetadataExtraction";
 import { writeApprovedChapterMetadata } from "../chapterMetadataFrontmatter";
 import { mergeChapterMetadataSuggestion, prepareChapterMetadataFrontmatter } from "../chapterMetadataMerge";
 import { validateChapterMetadataSuggestionObject } from "../chapterMetadataSchema";
-import { parseChapterMetadataSuggestion } from "../chapterMetadataValidation";
+import { parseChapterMetadataSuggestion, validateApprovedChapterMetadata } from "../chapterMetadataValidation";
 import { extractChapterText } from "../chapterTextExtraction";
 import { createChapterMetadataReview } from "../chapterMetadataWorkflow";
 import type { ChapterMetadataReviewState, ChapterMetadataSuggestion } from "../chapterMetadataTypes";
@@ -19,9 +19,9 @@ const suggestion: ChapterMetadataSuggestion = {
   linked_items: [],
   linked_locations: ["[[LOC_Klub_Neon]]"],
   linked_organizations: [],
-  linked_plotlines: [],
+  linked_plotlines: ["[[PLOT_Main]]"],
   linked_systems: [],
-  narrative_time: "noc",
+  plotlines: ["[[PLOT_Main]]"],
   pov: "[[CHAR_Fabian]]",
   summary: "Fabian přebírá zásilku.",
   title: "Stíny nad neonem"
@@ -33,21 +33,19 @@ const suggestion: ChapterMetadataSuggestion = {
 export const testChapterMetadataMergeProtectsFields = (): void => {
   const metadata = mergeChapterMetadataSuggestion({
     existingFrontmatter: {
+      createdAt: "2026-01-01T00:00:00.000Z",
       id: "existing-id",
-      metadata_created: "2026-01-01T00:00:00.000Z",
-      spoiler_level: "private",
-      status: "done",
-      timeline_position: "42"
+      status: "final",
+      version: "2"
     },
     now: new Date("2026-06-09T21:30:45.000Z"),
     suggestion
   });
 
   assertEqual(metadata.id, "existing-id", "Expected existing id to be preserved");
-  assertEqual(metadata.metadata_created, "2026-01-01T00:00:00.000Z", "Expected created timestamp to be preserved");
-  assertEqual(metadata.status, "done", "Expected existing status to be preserved");
-  assertEqual(metadata.timeline_position, "42", "Expected timeline position to be preserved");
-  assertEqual(metadata.spoiler_level, "private", "Expected spoiler level to be preserved");
+  assertEqual(metadata.createdAt, "2026-01-01T00:00:00.000Z", "Expected created timestamp to be preserved");
+  assertEqual(metadata.status, "final", "Expected existing status to be preserved");
+  assertEqual(metadata.version, "2", "Expected existing version to be preserved");
   assertEqual(metadata.title, "Stíny nad neonem", "Expected title suggestion to merge");
 };
 
@@ -64,11 +62,11 @@ export const testChapterMetadataMergeDefaultsMissingFields = (): void => {
   assertEqual(metadata.id, "20260609213045", "Expected timestamp id format");
   assertEqual(metadata.status, "draft", "Expected missing status to default to draft");
   assertEqual(metadata.type, "chapter", "Expected missing type to default to chapter");
-  assertEqual(metadata.spoiler_level, "internal", "Expected missing spoiler level to default to internal");
+  assertEqual(metadata.version, "1", "Expected missing version to default to 1");
 };
 
 /**
- * Verifies unknown existing status is preserved exactly.
+ * Verifies unknown existing status falls back to a valid chapter status.
  */
 export const testChapterMetadataMergePreservesUnknownStatus = (): void => {
   const metadata = mergeChapterMetadataSuggestion({
@@ -77,7 +75,7 @@ export const testChapterMetadataMergePreservesUnknownStatus = (): void => {
     suggestion
   });
 
-  assertEqual(metadata.status, "custom_review", "Expected unknown existing status to be preserved");
+  assertEqual(metadata.status, "draft", "Expected unknown existing status to fall back to draft");
 };
 
 /**
@@ -96,7 +94,7 @@ export const testChapterMetadataPrepareFrontmatterUpdatesTimestamp = (): void =>
   });
 
   assertEqual(prepared["custom"], "keep", "Expected unknown frontmatter to be preserved");
-  assertEqual(prepared["metadata_updated"], "2026-06-10T10:15:00.000Z", "Expected updated timestamp to change");
+  assertEqual(prepared["updatedAt"], "2026-06-10T10:15:00.000Z", "Expected updated timestamp to change");
 };
 
 /**
@@ -104,10 +102,8 @@ export const testChapterMetadataPrepareFrontmatterUpdatesTimestamp = (): void =>
  */
 export const testChapterMetadataValidation = (): void => {
   assertEqual(parseChapterMetadataSuggestion("not json").ok, false, "Expected non-JSON to be rejected");
-  assertEqual(parseChapterMetadataSuggestion("{\"narrative_time\":\"poledne\"}").ok, false, "Expected invalid narrative time to be rejected");
 
   const result = parseChapterMetadataSuggestion(JSON.stringify({
-    narrative_time: "noc",
     title: "Title"
   }));
 
@@ -226,12 +222,13 @@ export const testChapterMetadataBackupUsesAdapterForHiddenFolder = async (): Pro
  */
 export const testChapterMetadataWorkflowCreatesReview = async (): Promise<void> => {
   const file = {
+    basename: "chapter",
     extension: "md",
     path: "chapter.md"
   } as TFile;
   const app = {
     metadataCache: {
-      getFileCache: () => ({ frontmatter: { status: "done" } })
+      getFileCache: () => ({ frontmatter: { status: "final" } })
     },
     vault: {
       read: () => Promise.resolve("# Chapter\nBody")
@@ -256,7 +253,54 @@ export const testChapterMetadataWorkflowCreatesReview = async (): Promise<void> 
   });
 
   assert(result.ok, "Expected workflow to produce review state");
-  assertEqual(result.ok ? result.review.pendingMetadata.status : "", "done", "Expected existing status to win");
+  assertEqual(result.ok ? result.review.pendingMetadata.status : "", "final", "Expected existing status to win");
+};
+
+/**
+ * Verifies blank generated titles fall back to the active file name before approval validation.
+ */
+export const testChapterMetadataWorkflowUsesFileNameForBlankTitle = async (): Promise<void> => {
+  const file = {
+    basename: "Chapter One",
+    extension: "md",
+    path: "Chapter One.md"
+  } as TFile;
+  const app = {
+    metadataCache: {
+      getFileCache: () => ({ frontmatter: {} })
+    },
+    vault: {
+      read: () => Promise.resolve("# Chapter\nBody")
+    },
+    workspace: {
+      getActiveFile: () => file
+    }
+  } as unknown as App;
+
+  const result = await createChapterMetadataReview({
+    app,
+    generateRaw: () => Promise.resolve({
+      diagnostics: {
+        promptFiles: [],
+        stage: "model-call",
+        validationErrors: []
+      },
+      metadata: {
+        ...suggestion,
+        title: "   "
+      },
+      ok: true
+    }),
+    settings: DEFAULT_AURELIUS_SETTINGS
+  });
+
+  assert(result.ok, "Expected workflow to produce review state");
+  assertEqual(result.ok ? result.review.pendingMetadata.title : "", "Chapter One", "Expected blank title to fall back to file basename");
+  assertEqual(
+    result.ok ? validateApprovedChapterMetadata(result.review.pendingMetadata).ok : false,
+    true,
+    "Expected fallback title to make the review valid for approval"
+  );
 };
 
 /**
