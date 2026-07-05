@@ -1,4 +1,4 @@
-import { CHAPTER_METADATA_ARRAY_FIELDS, isNarrativeTime } from "./chapterMetadataContract";
+import { CHAPTER_METADATA_ARRAY_FIELDS, isChapterStatus } from "./chapterMetadataContract";
 import type { ChapterMetadata, ChapterMetadataSuggestion } from "./chapterMetadataTypes";
 
 const pad = (value: number): string => value.toString().padStart(2, "0");
@@ -22,16 +22,23 @@ export const generateChapterMetadataId = (date: Date): string => (
  */
 export const mergeChapterMetadataSuggestion = ({
   existingFrontmatter,
+  fallbackTitle,
   now,
   suggestion
 }: {
   readonly existingFrontmatter: Record<string, unknown>;
+  readonly fallbackTitle?: string;
   readonly now: Date;
   readonly suggestion: ChapterMetadataSuggestion;
 }): ChapterMetadata => {
-  const metadataCreated = stringOrEmpty(existingFrontmatter["metadata_created"]) || now.toISOString();
+  const existingStatus = existingFrontmatter["status"];
+  const title = nonEmptyStringOrEmpty(suggestion.title)
+    || nonEmptyStringOrEmpty(existingFrontmatter["title"])
+    || nonEmptyStringOrEmpty(fallbackTitle)
+    || "Untitled chapter";
 
   return {
+    createdAt: stringOrEmpty(existingFrontmatter["createdAt"]) || now.toISOString(),
     id: stringOrEmpty(existingFrontmatter["id"]) || generateChapterMetadataId(now),
     linked_characters: suggestion.linked_characters,
     linked_history: suggestion.linked_history,
@@ -40,16 +47,14 @@ export const mergeChapterMetadataSuggestion = ({
     linked_organizations: suggestion.linked_organizations,
     linked_plotlines: suggestion.linked_plotlines,
     linked_systems: suggestion.linked_systems,
-    metadata_created: metadataCreated,
-    metadata_updated: stringOrEmpty(existingFrontmatter["metadata_updated"]) || "",
-    narrative_time: isNarrativeTime(suggestion.narrative_time) ? suggestion.narrative_time : "neurčeno",
+    plotlines: suggestion.plotlines.length > 0 ? suggestion.plotlines : suggestion.linked_plotlines,
     pov: suggestion.pov,
-    spoiler_level: stringOrEmpty(existingFrontmatter["spoiler_level"]) || "internal",
-    status: stringOrEmpty(existingFrontmatter["status"]) || "draft",
+    status: isChapterStatus(existingStatus) ? existingStatus : "draft",
     summary: suggestion.summary,
-    timeline_position: stringOrEmpty(existingFrontmatter["timeline_position"]),
-    title: suggestion.title,
-    type: stringOrEmpty(existingFrontmatter["type"]) || "chapter"
+    title,
+    type: "chapter",
+    updatedAt: stringOrEmpty(existingFrontmatter["updatedAt"]) || now.toISOString(),
+    version: stringOrEmpty(existingFrontmatter["version"]) || "1"
   };
 };
 
@@ -68,7 +73,7 @@ export const prepareChapterMetadataFrontmatter = ({
   const nextFrontmatter: Record<string, unknown> = { ...existingFrontmatter };
   const metadataForWrite: ChapterMetadata = {
     ...approvedMetadata,
-    metadata_updated: now.toISOString()
+    updatedAt: now.toISOString()
   };
 
   for (const [key, value] of Object.entries(metadataForWrite)) {
@@ -101,3 +106,9 @@ export const isChapterMetadataArrayField = (field: keyof ChapterMetadata): field
 );
 
 const stringOrEmpty = (value: unknown): string => (typeof value === "string" ? value : "");
+
+const nonEmptyStringOrEmpty = (value: unknown): string => {
+  const text = stringOrEmpty(value).trim();
+
+  return text.length > 0 ? text : "";
+};

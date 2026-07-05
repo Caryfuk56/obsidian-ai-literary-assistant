@@ -1,7 +1,7 @@
 /**
  * Sidebar view identifiers available from the main menu.
  */
-export type MainViewId = "chat" | "quickActions";
+export type MainViewId = "chat" | "quickActions" | "metadata";
 
 /**
  * Definition for one icon-only sidebar main menu item.
@@ -24,6 +24,13 @@ export const mainMenuItems = [
     id: "chat",
     nameKey: "mainMenu.chat.name",
     view: "chat"
+  },
+  {
+    descriptionKey: "mainMenu.metadata.description",
+    icon: "tags",
+    id: "metadata",
+    nameKey: "mainMenu.metadata.name",
+    view: "metadata"
   },
   {
     descriptionKey: "mainMenu.quickActions.description",

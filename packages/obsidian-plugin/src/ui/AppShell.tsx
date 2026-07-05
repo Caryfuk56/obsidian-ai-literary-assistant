@@ -6,9 +6,8 @@ import { mainMenuItems, type MainViewId } from "../definitions/mainMenuItems";
 import { overflowMenuItems } from "../definitions/overflowMenuItems";
 import type LiteraryAssistantPlugin from "../main";
 import type { ToolOutput } from "../chapter-metadata/chapterMetadataTypes";
-import { ChatPanel } from "./chat/ChatPanel";
 import { ObsidianIcon } from "./ObsidianIcon";
-import { QuickActionsView } from "./quick-actions/QuickActionsView";
+import { getSidebarPanelDefinition } from "./panels";
 import { ToolOutputPanel } from "./tool-output/ToolOutputPanel";
 import { clearToolOutput, setToolOutput } from "./tool-output/toolOutputState";
 
@@ -26,6 +25,12 @@ export const AppShell = ({
   const [activeView, setActiveView] = useState<MainViewId>("chat");
   const [programmaticMarkdown, setProgrammaticMarkdown] = useState<string[]>([]);
   const [toolOutput, setCurrentToolOutput] = useState<ToolOutput | undefined>(undefined);
+  const [metadataRefreshToken, setMetadataRefreshToken] = useState(0);
+  const activePanel = getSidebarPanelDefinition(activeView) ?? getSidebarPanelDefinition("chat");
+  const hasPendingMetadataReview = toolOutput?.kind === "chapter-metadata-review";
+  const refreshMetadataPanel = (): void => {
+    setMetadataRefreshToken((currentToken) => currentToken + 1);
+  };
 
   const openOverflowMenu = (event: MouseEvent<HTMLButtonElement>): void => {
     const menu = new Menu();
@@ -71,33 +76,31 @@ export const AppShell = ({
         </button>
       </nav>
       <main className="ai-literary-assistant-content">
-        {activeView === "chat" ? (
-          <ChatPanel
-            app={app}
-            onToolOutput={(output) => {
-              setCurrentToolOutput((currentOutput) => setToolOutput(currentOutput, output));
-            }}
-            plugin={plugin}
-            programmaticMarkdown={programmaticMarkdown}
-          />
-        ) : (
-          <QuickActionsView
-            app={app}
-            onToolOutput={(output) => {
-              setCurrentToolOutput((currentOutput) => setToolOutput(currentOutput, output));
-            }}
-            plugin={plugin}
-            onProgrammaticMarkdown={(markdown) => {
-              setProgrammaticMarkdown((currentMarkdown) => [...currentMarkdown, markdown]);
-              setActiveView("chat");
-            }}
-          />
-        )}
+        {activePanel?.render({
+          app,
+          hasPendingMetadataReview,
+          onProgrammaticMarkdown: (markdown) => {
+            setProgrammaticMarkdown((currentMarkdown) => [...currentMarkdown, markdown]);
+            setActiveView("chat");
+          },
+          onToolOutput: (output) => {
+            setCurrentToolOutput((currentOutput) => setToolOutput(currentOutput, output));
+          },
+          plugin,
+          metadataRefreshToken,
+          programmaticMarkdown
+        })}
         <ToolOutputPanel
           app={app}
           onClear={() => {
             const nextOutput = clearToolOutput();
             setCurrentToolOutput(nextOutput);
+          }}
+          onWorkflowComplete={() => {
+            void plugin.metadataIndexesService.create().finally(() => {
+              refreshMetadataPanel();
+              window.setTimeout(refreshMetadataPanel, 250);
+            });
           }}
           output={toolOutput}
         />

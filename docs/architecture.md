@@ -19,6 +19,14 @@ Attachment state is in-memory draft UI state only. It does not persist files, re
 
 Sidebar styling is authored as modular CSS under `packages/obsidian-plugin/src/ui/styles` and bundled by esbuild to `dist/styles.css`. The React shell does not inject a large TypeScript stylesheet at runtime.
 
+## Runtime Metadata Indexes
+
+Literary project metadata is stored in Markdown frontmatter. The vault filesystem and frontmatter remain the source of truth. `MetadataIndexesService` scans Markdown files on plugin startup, validates frontmatter with the existing literary metadata Zod schemas, and stores a memory-only `ProjectIndex` projection for UI reference resolution and future navigation features.
+
+Index records intentionally contain only `id`, `type`, `title`, `version`, `path`, and `link`. The service does not persist JSON snapshots or write plugin data. Plugin-owned metadata saves refresh the runtime index after frontmatter writes.
+
+The metadata sidebar panel renders active-file metadata from declarative field definitions instead of hardcoding each row in the component. It follows Obsidian active-file changes through a dedicated active-metadata hook while keeping manual Refresh wired to the same reload path. Metadata field rows, field inputs, and reference resolution live in focused metadata UI modules so dynamic forms can evolve without growing the panel shell. Multiselect fields can resolve selected values against the runtime indexes and visually mark missing references. Files without frontmatter show the active path and a reusable Create Metadata control; chapter metadata generation continues to use the existing `/chapter_metadata` slash command path and approval workflow. Date fields remain stored as frontmatter strings but are formatted for localized UI display.
+
 ## AI Settings and Routing
 
 The plugin stores `AureliusSettings` with Obsidian plugin data via `plugin.loadData()` and `plugin.saveData()`. API keys are edited through a native Obsidian settings tab and are stored as plugin data, not in an encrypted OS keychain.

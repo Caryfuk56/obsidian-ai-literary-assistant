@@ -1,4 +1,4 @@
-import { CHAPTER_METADATA_ARRAY_FIELDS, NARRATIVE_TIME_VALUES } from "./chapterMetadataContract";
+import { CHAPTER_METADATA_ARRAY_FIELDS } from "./chapterMetadataContract";
 import type { ChapterMetadataSuggestion } from "./chapterMetadataTypes";
 
 /**
@@ -25,7 +25,7 @@ export const validateChapterMetadataSuggestionObject = (
     linked_organizations: [],
     linked_plotlines: [],
     linked_systems: [],
-    narrative_time: "neurčeno",
+    plotlines: [],
     pov: "",
     summary: "",
     title: ""
@@ -45,16 +45,6 @@ export const validateChapterMetadataSuggestionObject = (
     }
 
     suggestion[field] = fieldValue;
-  }
-
-  const narrativeTime = value["narrative_time"];
-
-  if (narrativeTime === undefined || narrativeTime === null || narrativeTime === "") {
-    suggestion.narrative_time = "neurčeno";
-  } else if (typeof narrativeTime === "string" && NARRATIVE_TIME_VALUES.includes(narrativeTime as never)) {
-    suggestion.narrative_time = narrativeTime as ChapterMetadataSuggestion["narrative_time"];
-  } else {
-    validationErrors.push("narrative_time: expected one of ráno, den, večer, noc, neurčeno");
   }
 
   for (const field of CHAPTER_METADATA_ARRAY_FIELDS) {

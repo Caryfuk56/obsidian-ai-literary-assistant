@@ -94,6 +94,10 @@
       "name": "Chat",
       "description": "Otevřít chat"
     },
+    "metadata": {
+      "name": "Metadata",
+      "description": "Otevřít zobrazení metadat"
+    },
     "quickActions": {
       "name": "Rychlé akce",
       "description": "Otevřít rychlé akce"
@@ -140,6 +144,154 @@
   "toolOutput": {
     "ariaLabel": "Výstup nástroje"
   },
+  "metadataTypes": {
+    "chapter": "Kapitola",
+    "character": "Postava",
+    "history": "Historie",
+    "item": "Předmět",
+    "location": "Místo",
+    "organization": "Organizace",
+    "plotline": "Dějová linka",
+    "routing": "Směrování",
+    "structure": "Struktura",
+    "synopsis": "Synopse",
+    "system": "Systém",
+    "theme": "Téma",
+    "timeline": "Časová osa"
+  },
+  "metadataOptions": {
+    "chapterStatus": {
+      "not_started": "Nezahájeno",
+      "outline": "Osnova",
+      "draft": "Koncept",
+      "revision": "Revize",
+      "editing": "Editace",
+      "final": "Finální"
+    },
+    "relevance": {
+      "major": "Hlavní",
+      "supporting": "Vedlejší",
+      "background": "Okrajová"
+    },
+    "projectStatus": {
+      "draft": "Koncept",
+      "active": "Aktivní",
+      "stable": "Stabilní"
+    },
+    "characterRole": {
+      "protagonist": "Protagonista",
+      "antagonist": "Antagonista",
+      "support": "Podpora"
+    },
+    "characterImportance": {
+      "major": "Hlavní",
+      "minor": "Vedlejší",
+      "cameo": "Cameo"
+    },
+    "truthStatus": {
+      "public": "Veřejné",
+      "hidden": "Skryté",
+      "contested": "Sporné"
+    },
+    "secrecyLevel": {
+      "public": "Veřejné",
+      "restricted": "Omezené",
+      "secret": "Tajné"
+    },
+    "itemType": {
+      "artifact": "Artefakt",
+      "document": "Dokument",
+      "evidence": "Důkaz",
+      "technology": "Technologie",
+      "relic": "Relikvie",
+      "personal": "Osobní předmět"
+    },
+    "storyScope": {
+      "short_story": "Povídka",
+      "novella": "Novela",
+      "novel": "Román",
+      "series": "Série"
+    },
+    "narrativeMode": {
+      "first_person": "První osoba",
+      "limited_third": "Omezená třetí osoba",
+      "multiple_pov": "Více úhlů pohledu"
+    }
+  },
+  "metadataView": {
+    "ariaLabel": "Metadata",
+    "title": "Metadata",
+    "emptyPath": "Žádný aktivní soubor",
+    "actions": {
+      "editAll": "Upravit vše",
+      "generateByAi": "Generovat pomocí AI",
+      "refresh": "Obnovit",
+      "removeValue": "Odebrat {{value}}",
+      "save": "Uložit",
+      "stopEditing": "Ukončit úpravy"
+    },
+    "create": {
+      "button": "Vytvořit metadata",
+      "failed": "Generování metadat selhalo.",
+      "generating": "Metadata se automaticky generují...",
+      "loadingLabel": "Generují se metadata",
+      "notImplemented": "Zatím není implementováno.",
+      "title": "Vytvořit metadata",
+      "typeLabel": "Typ metadat"
+    },
+    "fields": {
+      "aliases": "Aliasy",
+      "category": "Kategorie",
+      "coreTheme": "Hlavní téma",
+      "createdAt": "Vytvořeno",
+      "currentHolder": "Aktuální držitel",
+      "eventTypes": "Typy událostí",
+      "genre": "Žánr",
+      "id": "ID",
+      "importance": "Důležitost",
+      "itemType": "Typ předmětu",
+      "language": "Jazyk",
+      "locationType": "Typ místa",
+      "narrativeMode": "Vypravěčský režim",
+      "organizationType": "Typ organizace",
+      "plotlines": "Dějové linky",
+      "pov": "Úhel pohledu",
+      "povRelevance": "Relevance pro úhel pohledu",
+      "publicDescription": "Veřejný popis",
+      "relevance": "Relevance",
+      "role": "Role",
+      "routingVersion": "Verze směrování",
+      "secrecyLevel": "Úroveň utajení",
+      "setting": "Prostředí",
+      "status": "Stav",
+      "storyFunction": "Funkce v příběhu",
+      "storyScope": "Rozsah příběhu",
+      "storyTitle": "Název příběhu",
+      "summary": "Shrnutí",
+      "systemType": "Typ systému",
+      "targetScope": "Cílový rozsah",
+      "theme": "Téma",
+      "timelinePosition": "Pozice v časové ose",
+      "title": "Název",
+      "tone": "Tón",
+      "truthStatus": "Stav pravdivosti",
+      "type": "Typ",
+      "updatedAt": "Aktualizováno",
+      "version": "Verze"
+    },
+    "errors": {
+      "generateFailed": "Generování metadat selhalo.",
+      "invalidDraft": "Rozpracovaná metadata nejsou platná.",
+      "invalidMetadata": "Aktivní soubor neobsahuje platná literární metadata.",
+      "noActiveMarkdownFile": "Nebyl nalezen aktivní markdownový soubor.",
+      "noFrontmatter": "Aktivní soubor nemá frontmatter.",
+      "placeholderFailed": "Nepodařilo se vytvořit zástupný soubor.",
+      "saveFailed": "Uložení metadat selhalo."
+    },
+    "notices": {
+      "saved": "Metadata uložena."
+    }
+  },
   "chapterMetadata": {
     "title": "Metadata kapitoly",
     "actions": {
@@ -150,6 +302,9 @@
     "fields": {
       "type": "Typ",
       "id": "ID",
+      "version": "Verze",
+      "createdAt": "Vytvořeno",
+      "updatedAt": "Aktualizováno",
       "metadata_created": "Metadata vytvořena",
       "metadata_updated": "Metadata aktualizována",
       "title": "Název",

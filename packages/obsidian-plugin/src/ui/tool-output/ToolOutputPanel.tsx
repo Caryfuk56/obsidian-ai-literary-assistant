@@ -13,10 +13,12 @@ import { MarkdownBlock } from "../MarkdownBlock";
 export const ToolOutputPanel = ({
   app,
   onClear,
+  onWorkflowComplete,
   output
 }: {
   readonly app: App;
   readonly onClear: () => void;
+  readonly onWorkflowComplete?: () => void;
   readonly output: ToolOutput | undefined;
 }): ReactElement | null => {
   const { t } = useTranslation();
@@ -42,6 +44,7 @@ export const ToolOutputPanel = ({
     }
 
     if (result.ok) {
+      onWorkflowComplete?.();
       onClear();
       return;
     }
